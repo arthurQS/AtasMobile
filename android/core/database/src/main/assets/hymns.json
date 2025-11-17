@@ -1,0 +1,1322 @@
+[
+  {
+    "numero": 1,
+    "titulo": "A Alva Rompe",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 2,
+    "titulo": "Tal Como um Facho",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 3,
+    "titulo": "Alegres Cantemos",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 4,
+    "titulo": "No Monte a Bandeira",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 5,
+    "titulo": "Israel, Jesus Te Chama",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 6,
+    "titulo": "Um Anjo Lá do Céu",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 7,
+    "titulo": "O Que Vimos Lá nos Céus",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 8,
+    "titulo": "Oração pelo Profeta",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 9,
+    "titulo": "Graças Damos, Ó Deus, Por um Profeta",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 10,
+    "titulo": "Vinde ao Profeta Escutar",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 11,
+    "titulo": "Abençoa Nosso Profeta",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 12,
+    "titulo": "Que Manhã Maravilhosa!",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 13,
+    "titulo": "Rejubilai-vos, Ó Nações",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 14,
+    "titulo": "Hoje, ao Profeta Louvemos",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 15,
+    "titulo": "Um Pobre e Aflito Viajor",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 16,
+    "titulo": "Ó Montanhas Mil",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 17,
+    "titulo": "Por Teus Dons",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 18,
+    "titulo": "Vede, Ó Santos",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 19,
+    "titulo": "Sereno Finda o Dia",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 20,
+    "titulo": "Vinde, Ó Santos",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 21,
+    "titulo": "Ao Salvador Louvemos",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 22,
+    "titulo": "Em Glória Resplandesce",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 23,
+    "titulo": "Lá nos Cumes",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 24,
+    "titulo": "Vem, Ó Dia Prometido",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 25,
+    "titulo": "Bela Sião",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 26,
+    "titulo": "O Mundo Desperta",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 27,
+    "titulo": "Vinde, Ó Filhos do Senhor",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 28,
+    "titulo": "Ó Vem, Supremo Rei",
+    "categoria": "Restauração"
+  },
+  {
+    "numero": 29,
+    "titulo": "Ó Criaturas do Senhor",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 30,
+    "titulo": "Ó Santos, Que na Terra Habitais",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 31,
+    "titulo": "Com Braço Forte",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 32,
+    "titulo": "Castelo Forte",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 33,
+    "titulo": "Glória a Deus Cantai",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 34,
+    "titulo": "Louvai a Deus",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 35,
+    "titulo": "A Deus, Senhor e Rei",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 36,
+    "titulo": "Deus É Amor",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 37,
+    "titulo": "O Senhor Meu Pastor É",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 38,
+    "titulo": "Que Toda Honra e Glória",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 39,
+    "titulo": "Corações, Pois, Exultai",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 40,
+    "titulo": "Jeová, Sê Nosso Guia",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 41,
+    "titulo": "Firmes Segui",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 42,
+    "titulo": "Que Firme Alicerce",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 43,
+    "titulo": "Grandioso És Tu",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 44,
+    "titulo": "Jesus, Minha Luz",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 45,
+    "titulo": "Ó Vós Que Amais ao Senhor",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 46,
+    "titulo": "Nossas Vozes Elevemos",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 47,
+    "titulo": "Deus nos Rege com Amor",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 48,
+    "titulo": "Ó Pai Bendito",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 49,
+    "titulo": "Pela Beleza do Mundo",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 50,
+    "titulo": "Cantando Louvamos",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 51,
+    "titulo": "Oração de Graças",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 52,
+    "titulo": "Vinde, Ó Povos, Graças Dar",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 53,
+    "titulo": "Se Tenho Fé",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 54,
+    "titulo": "Doce É o Trabalho",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 55,
+    "titulo": "Santo! Santo! Santo!",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 56,
+    "titulo": "Os Céus Proclamam",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 57,
+    "titulo": "Conta as Bênçãos",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 58,
+    "titulo": "Ao Deus de Abraão Louvai",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 59,
+    "titulo": "Louvai o Eterno Criador",
+    "categoria": "Louvor e Graças"
+  },
+  {
+    "numero": 60,
+    "titulo": "Brilha, Meiga Luz",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 61,
+    "titulo": "Careço de Jesus",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 62,
+    "titulo": "Mais Perto Quero Estar",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 63,
+    "titulo": "Guia-me a Ti",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 64,
+    "titulo": "Ó Pai Celeste",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 65,
+    "titulo": "Jesus Cristo É Meu Senhor",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 66,
+    "titulo": "Creio em Cristo",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 67,
+    "titulo": "Vive o Redentor",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 68,
+    "titulo": "Vinde a Mim",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 69,
+    "titulo": "Vinde a Cristo",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 70,
+    "titulo": "Eu Sei Que Vive Meu Senhor",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 71,
+    "titulo": "Testemunho",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 72,
+    "titulo": "Mestre, o Mar Se Revolta",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 73,
+    "titulo": "Onde Encontrar a Paz?",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 74,
+    "titulo": "Sê Humilde",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 75,
+    "titulo": "Mais Vontade Dá-me",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 76,
+    "titulo": "Rocha Eterna",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 77,
+    "titulo": "A Luz de Deus",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 78,
+    "titulo": "Embora Cheios de Pesar",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 79,
+    "titulo": "Ó Doce, Grata Oração",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 80,
+    "titulo": "Santo Espírito de Deus",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 81,
+    "titulo": "Secreta Oração",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 82,
+    "titulo": "Eis-nos Agora Aqui",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 83,
+    "titulo": "Com Fervor Fizeste a Prece?",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 84,
+    "titulo": "Só por em Ti, Jesus, Pensar",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 85,
+    "titulo": "Deus Vos Guarde",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 86,
+    "titulo": "Nós Pedimos-te, Senhor",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 87,
+    "titulo": "Ó Bondoso Pai Eterno",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 88,
+    "titulo": "Dá-nos, Tu, ó Pai Bondoso",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 89,
+    "titulo": "Ao Partir Cantemos",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 90,
+    "titulo": "Teu Santo Espírito, Senhor",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 91,
+    "titulo": "Qual Orvalho Que Cintila",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 92,
+    "titulo": "Vai Fugindo o Dia",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 93,
+    "titulo": "Suavemente a Noite Cai",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 94,
+    "titulo": "Oração para a Noite",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 95,
+    "titulo": "Eis-nos, Hoje, a Teus Pés",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 96,
+    "titulo": "É Tarde, a Noite Logo Vem",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 97,
+    "titulo": "Comigo Habita",
+    "categoria": "Oração e Súplica"
+  },
+  {
+    "numero": 98,
+    "titulo": "Ó Deus, Senhor Eterno",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 99,
+    "titulo": "Ao Partilhar de Teu Amor",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 100,
+    "titulo": "Entoai a Deus Louvor",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 101,
+    "titulo": "Deus, Escuta-nos Orar",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 102,
+    "titulo": "Nossa Humilde Prece Atende",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 103,
+    "titulo": "Enquanto unidos em Amor",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 104,
+    "titulo": "Quão Grato É Cantar Louvor",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 105,
+    "titulo": "Cantemos Todos a Jesus",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 106,
+    "titulo": "Jesus de Nazaré, Mestre e Rei",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 107,
+    "titulo": "Deus Tal Amor por Nós Mostrou",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 108,
+    "titulo": "Eis-nos à Mesa do Senhor",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 109,
+    "titulo": "Em uma Cruz Jesus Morreu",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 110,
+    "titulo": "Vede, Morreu o Redentor",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 111,
+    "titulo": "Lembrando a Morte de Jesus",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 112,
+    "titulo": "Assombro me Causa",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 113,
+    "titulo": "No Monte do Calvário",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 114,
+    "titulo": "Da Corte Celestial",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 115,
+    "titulo": "Tão Humilde ao Nascer",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 116,
+    "titulo": "Sobre o Calvário",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 117,
+    "titulo": "Com Irmãos Nós Reunidos",
+    "categoria": "Hinos Sacramentais"
+  },
+  {
+    "numero": 118,
+    "titulo": "Manhã da Ressurreição",
+    "categoria": "Páscoa"
+  },
+  {
+    "numero": 119,
+    "titulo": "Cristo É Já Ressuscitado",
+    "categoria": "Páscoa"
+  },
+  {
+    "numero": 120,
+    "titulo": "Cristo Já Ressuscitou",
+    "categoria": "Páscoa"
+  },
+  {
+    "numero": 121,
+    "titulo": "Mundo Feliz, Nasceu Jesus",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 122,
+    "titulo": "Erguei-vos Cantando",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 123,
+    "titulo": "Lá na Judéia, Onde Cristo Nasceu",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 124,
+    "titulo": "Anjos Descem a Cantar",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 125,
+    "titulo": "Ouvi os Sinos do Natal",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 126,
+    "titulo": "Noite Feliz",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 127,
+    "titulo": "Jesus num Presépio",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 128,
+    "titulo": "Na Bela Noite Se Ouviu",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 129,
+    "titulo": "Pequena Vila de Belém",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 130,
+    "titulo": "No Céu Desponta Nova Luz",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 131,
+    "titulo": "No Dia de Natal",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 132,
+    "titulo": "Eis dos Anjos a Harmonia",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 133,
+    "titulo": "Quando o Anjo Proclamou",
+    "categoria": "Natal"
+  },
+  {
+    "numero": 134,
+    "titulo": "Sim, Eu Te Seguirei",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 135,
+    "titulo": "Eu Devo Partilhar",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 136,
+    "titulo": "Neste mundo",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 137,
+    "titulo": "Oh! Falemos Palavras Amáveis",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 138,
+    "titulo": "Não Deixeis Palavras Duras",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 139,
+    "titulo": "Deus É Consolador Sem Par",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 140,
+    "titulo": "Ama o Pastor Seu Rebanho",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 141,
+    "titulo": "Trabalhemos Hoje",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 142,
+    "titulo": "Nossa Lei É Trabalhar",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 143,
+    "titulo": "Pai, Inspira-me ao Ensinar",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 144,
+    "titulo": "Mãos ao Trabalho",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 145,
+    "titulo": "Sempre Que Alguém Nos Faz o Bem",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 146,
+    "titulo": "Se a Vida É Penosa",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 147,
+    "titulo": "Faze o Bem",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 148,
+    "titulo": "Faze o Bem, Escolhendo o Que É Certo",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 149,
+    "titulo": "A Alma É Livre",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 150,
+    "titulo": "Quem Segue ao Senhor?",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 151,
+    "titulo": "Minha Alma Hoje Tem a luz",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 152,
+    "titulo": "Prolongue os Bons Momentos",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 153,
+    "titulo": "Deixa a Luz do Sol Entrar",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 154,
+    "titulo": "Enquanto o Sol Brilha",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 155,
+    "titulo": "Luz Espalhai",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 156,
+    "titulo": "Agora Não, mas Logo Mais",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 157,
+    "titulo": "Amor que Cristo Demonstrou",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 158,
+    "titulo": "Tu Jesus, Ó Rocha Eterna",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 159,
+    "titulo": "À Glória Nós Iremos",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 160,
+    "titulo": "Somos os Soldados",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 161,
+    "titulo": "As Hostes do Eterno",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 162,
+    "titulo": "Com Valor Marchemos",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 163,
+    "titulo": "Ide por Todo o Mundo",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 164,
+    "titulo": "De Um a Outro Pólo",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 165,
+    "titulo": "Semeando",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 166,
+    "titulo": "Chamados a Servir",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 167,
+    "titulo": "Aonde Mandares Irei",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 168,
+    "titulo": "Povos da Terra, Vinde, Escutai!",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 169,
+    "titulo": "Eis os Teus Filhos, Ó Senhor",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 170,
+    "titulo": "Avante, ao Mundo Proclamai",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 171,
+    "titulo": "A Verdade o Que É?",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 172,
+    "titulo": "A Verdade É Nosso Guia",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 173,
+    "titulo": "Ao Raiar o Novo Dia",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 174,
+    "titulo": "Sê Bem-vindo, Dia Santo",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 175,
+    "titulo": "Do Pó Nos Fala uma Voz",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 176,
+    "titulo": "Estudando as Escrituras",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 177,
+    "titulo": "Ó Meu Pai",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 178,
+    "titulo": "Ó Quão Majestosa É a Obra de Deus",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 179,
+    "titulo": "Ó Jeová, Senhor do Céu",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 180,
+    "titulo": "Já Refulge a Glória Eterna",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 181,
+    "titulo": "O Fim Se Aproxima",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 182,
+    "titulo": "Juventude da Promessa",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 183,
+    "titulo": "Deve Sião Fugir à Luta?",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 184,
+    "titulo": "Constantes Qual Firmes Montanhas",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 185,
+    "titulo": "Quão Belos São",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 186,
+    "titulo": "Levantai-vos, Ide ao Templo",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 187,
+    "titulo": "Nós Dedicamos Esta Casa",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 188,
+    "titulo": "Com Amor no Lar",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 189,
+    "titulo": "Pode o Lar Ser Como o Céu",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 190,
+    "titulo": "Os Teus Filhos, Pai Celeste",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 191,
+    "titulo": "As Famílias Poderão Ser Eternas",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 192,
+    "titulo": "Ó Crianças, Deus Vos Ama",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 193,
+    "titulo": "Sou um Filho de Deus",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 194,
+    "titulo": "Guarda os Mandamentos",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 195,
+    "titulo": "Eu Sei que Deus Vive",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 196,
+    "titulo": "Nas Montanhas de Sião",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 197,
+    "titulo": "Amai-vos Uns aos Outros",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 198,
+    "titulo": "Quando Vejo o Sol Raiar",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 199,
+    "titulo": "Faz-me Andar Só na Luz",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 200,
+    "titulo": "Irmãs em Sião (Vozes Femininas)",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 201,
+    "titulo": "Ó Filhos do Senhor (Vozes Masculinas)",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 202,
+    "titulo": "Brilham Raios de Clemência (Vozes Masculinas)",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 203,
+    "titulo": "Ó Élderes de Israel",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 204,
+    "titulo": "Ó Vós, Que Sois Chamados",
+    "categoria": "Temas Especiais"
+  },
+  {
+    "numero": 1001,
+    "titulo": "Ó Senhor de toda bênção",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1002,
+    "titulo": "Quando o Salvador voltar",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1003,
+    "titulo": "Minha alma tem paz",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1004,
+    "titulo": "Quero andar com Cristo",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1005,
+    "titulo": "Do passarinho cuida",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1006,
+    "titulo": "Pense na canção",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1007,
+    "titulo": "Partido o pão",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1008,
+    "titulo": "Pão do Céu, Água Viva",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1009,
+    "titulo": "Getsêmani",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1010,
+    "titulo": "Sublime graça",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1011,
+    "titulo": "De mãos dadas em união",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1012,
+    "titulo": "A qualquer hora ou lugar",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1013,
+    "titulo": "O amor de Deus",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1014,
+    "titulo": "O meu Pastor vai me amparar",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1015,
+    "titulo": "O profundo amor de Cristo",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1016,
+    "titulo": "Olhai as mãos do Redentor",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1017,
+    "titulo": "Este é o Cristo",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1018,
+    "titulo": "Vem, ó Jesus! Vem!",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1019,
+    "titulo": "Desejo me tornar como Cristo",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1020,
+    "titulo": "O Salvador ternamente nos chama",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1021,
+    "titulo": "Que Cristo me ama eu sei",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1022,
+    "titulo": "Fé a cada passo",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1023,
+    "titulo": "Firme nas promessas",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1024,
+    "titulo": "Tenho fé em Jesus, meu Senhor",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1025,
+    "titulo": "Consagro meu coração em retidão",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1026,
+    "titulo": "Lugares santos",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1027,
+    "titulo": "Ao virmos, hoje, adorar",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1028,
+    "titulo": "Tenho uma luz em mim",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1029,
+    "titulo": "Muitas bênçãos recebo",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1030,
+    "titulo": "Tão perto ao orar",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1031,
+    "titulo": "Ó, vinde, ouvi a voz divina",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1032,
+    "titulo": "Buscai a Cristo",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1033,
+    "titulo": "Oh, que grande alegria é servir",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1034,
+    "titulo": "Pioneiros como eu",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1035,
+    "titulo": "Neste Dia do Senhor",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1036,
+    "titulo": "O Livro de Mórmon vou ler",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1037,
+    "titulo": "Vou viver para a Deus servir",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1038,
+    "titulo": "O meu Senhor é meu Pastor",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1039,
+    "titulo": "Porque",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1040,
+    "titulo": "Sua voz a soar",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1041,
+    "titulo": "Meu coração é Teu, Jesus",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1042,
+    "titulo": "Bondoso Deus, que nos conduz",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1043,
+    "titulo": "Faz-nos lembrar",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1044,
+    "titulo": "Cristo a todos ministrou",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1045,
+    "titulo": "\"Vinde a Mim\", diz Jesus",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1046,
+    "titulo": "Há no céu muitas estrelas",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1047,
+    "titulo": "Ele me conhece bem",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1048,
+    "titulo": "A Ti oramos, Pai Celeste",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1049,
+    "titulo": "Posso orar como Joseph orou",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1050,
+    "titulo": "Oh, que estejas junto a mim",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1051,
+    "titulo": "Senhor, oh, que dia bom!",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1201,
+    "titulo": "Eis a Páscoa do Senhor",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1202,
+    "titulo": "O menino Jesus nasceu",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1203,
+    "titulo": "Quem é o menino?",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1204,
+    "titulo": "Estrela brilhante e bela",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1205,
+    "titulo": "Na Páscoa do Senhor",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1206,
+    "titulo": "Você viu?",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1207,
+    "titulo": "Noite de paz",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1208,
+    "titulo": "Ao mundo proclamai",
+    "categoria": "Novos Hinos"
+  },
+  {
+    "numero": 1209,
+    "titulo": "Bebezinho no presépio",
+    "categoria": "Novos Hinos"
+  }
+]

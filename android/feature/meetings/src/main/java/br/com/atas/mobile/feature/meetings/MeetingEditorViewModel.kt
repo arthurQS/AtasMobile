@@ -1,0 +1,111 @@
+package br.com.atas.mobile.feature.meetings
+
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import br.com.atas.mobile.core.data.model.Meeting
+import br.com.atas.mobile.core.data.model.MeetingDetails
+import br.com.atas.mobile.core.data.repository.HymnRepository
+import br.com.atas.mobile.core.data.repository.MeetingRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.LocalDate
+import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+@HiltViewModel
+class MeetingEditorViewModel @Inject constructor(
+    private val meetingRepository: MeetingRepository,
+    private val hymnRepository: HymnRepository,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    private val meetingId: Long? =
+        savedStateHandle.get<Long>("meetingId")?.takeIf { it > 0 }
+
+    private val _uiState = MutableStateFlow(
+        MeetingEditorUiState(
+            date = LocalDate.now().toString(),
+            details = MeetingDetails()
+        )
+    )
+    val uiState: StateFlow<MeetingEditorUiState> = _uiState
+
+    init {
+        meetingId?.let { id ->
+            viewModelScope.launch {
+                meetingRepository.get(id)?.let { meeting ->
+                    _uiState.update {
+                        it.copy(
+                            meetingId = meeting.id,
+                            date = meeting.date,
+                            title = meeting.title,
+                            details = meeting.details,
+                            createdAt = meeting.createdAt
+                        )
+                    }
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            hymnRepository.watchAll().collect { list ->
+                if (list.isNotEmpty()) {
+                    _uiState.update { it.copy(hymns = list) }
+                } else {
+                    val fallback = hymnRepository.search("")
+                    if (fallback.isNotEmpty()) {
+                        _uiState.update { it.copy(hymns = fallback) }
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateDate(newDate: String) {
+        _uiState.update { it.copy(date = newDate) }
+    }
+
+    fun updateTitle(newTitle: String) {
+        _uiState.update { it.copy(title = newTitle) }
+    }
+
+    fun updateDetails(details: MeetingDetails) {
+        _uiState.update { it.copy(details = details) }
+    }
+
+    fun save(onSuccess: (Long) -> Unit) {
+        val current = _uiState.value
+        if (current.date.isBlank() || current.title.isBlank()) {
+            _uiState.update { it.copy(errorMessage = "Preencha data e título") }
+            return
+        }
+        viewModelScope.launch {
+            _uiState.update { it.copy(isSaving = true, errorMessage = null) }
+            val meeting = Meeting(
+                id = current.meetingId ?: 0L,
+                date = current.date,
+                title = current.title.trim(),
+                details = current.details,
+                createdAt = current.createdAt
+            )
+            runCatching {
+                meetingRepository.upsert(meeting)
+            }
+                .onSuccess { id ->
+                    _uiState.update { it.copy(isSaving = false) }
+                    onSuccess(id)
+                }
+                .onFailure { throwable ->
+                    _uiState.update {
+                        it.copy(
+                            isSaving = false,
+                            errorMessage = throwable.message ?: "Erro ao salvar"
+                        )
+                    }
+                }
+        }
+    }
+}
