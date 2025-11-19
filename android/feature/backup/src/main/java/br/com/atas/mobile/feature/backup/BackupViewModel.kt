@@ -41,6 +41,7 @@ class BackupViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         driveFolderName = settings.folderName,
+                        driveFolderUri = settings.folderUri,
                         isDriveLinked = settings.folderUri != null
                     )
                 }
