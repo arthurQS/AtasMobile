@@ -233,6 +233,13 @@ fun MeetingEditorScreen(
                 icon = Icons.Default.CalendarToday
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedTextField(
+                        value = details.anuncios,
+                        onValueChange = { onDetailsChange(details.copy(anuncios = it)) },
+                        label = { Text("Anúncios") },
+                        modifier = Modifier.fillMaxWidth(),
+                        minLines = 3
+                    )
                     HymnPickerField(
                         label = "Hino de abertura",
                         value = details.hinos.abertura,
@@ -245,13 +252,6 @@ fun MeetingEditorScreen(
                         onValueChange = { onDetailsChange(details.copy(oracoes = details.oracoes.copy(abertura = it))) },
                         label = { Text("Oração de abertura") },
                         modifier = Modifier.fillMaxWidth()
-                    )
-                    OutlinedTextField(
-                        value = details.anuncios,
-                        onValueChange = { onDetailsChange(details.copy(anuncios = it)) },
-                        label = { Text("Anúncios") },
-                        modifier = Modifier.fillMaxWidth(),
-                        minLines = 3
                     )
                 }
             }

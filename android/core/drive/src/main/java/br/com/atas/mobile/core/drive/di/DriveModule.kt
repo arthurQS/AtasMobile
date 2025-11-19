@@ -1,7 +1,7 @@
 package br.com.atas.mobile.core.drive.di
 
 import br.com.atas.mobile.core.drive.api.DriveBackupCoordinator
-import br.com.atas.mobile.core.drive.impl.StubDriveBackupCoordinator
+import br.com.atas.mobile.core.drive.impl.DriveDocumentBackupCoordinator
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,6 +14,6 @@ abstract class DriveModule {
     @Binds
     @Singleton
     abstract fun bindDriveCoordinator(
-        impl: StubDriveBackupCoordinator
+        impl: DriveDocumentBackupCoordinator
     ): DriveBackupCoordinator
 }

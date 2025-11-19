@@ -30,6 +30,7 @@ android {
 
 dependencies {
     implementation(project(":core:data"))
+    implementation(project(":core:drive"))
     implementation(project(":core:ui"))
 
     implementation(platform(libs.compose.bom))
@@ -37,6 +38,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons)
 
+    implementation(libs.androidx.documentfile)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)

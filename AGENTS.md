@@ -1,39 +1,38 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
-- Place production code in `src/`, tests in `tests/`, assets in `assets/`, and scripts in `scripts/`. Keep configuration in `config/` and documentation in `docs/`.
-- Example layout:
-  - `src/` (application modules)
-  - `tests/` (mirrors `src/` folders; one test file per module)
-  - `assets/` (images, styles, static files)
-  - `scripts/` (dev/build helpers)
-  - `config/` (env, build/test configs)
+## Estrutura e modulos
+- Todo o aplicativo Android mora em `android/` e usa Gradle Kotlin DSL. Mantenha codigo de producao em submodulos (`app`, `core:*`, `feature:*`) e recursos (assets, manifests) dentro de `src/main`.
+- `app` orquestra navegacao Compose, Hilt e as dependencias entre modulos. `core:data` define modelos/contratos, `core:database` implementa Room/DataStore e repositorios offline, `core:drive` encapsula integracoes com DocumentFile/Google Drive e `core:ui` concentra o tema Compose. `feature:meetings` e `feature:backup` expõem UI + view models especificos.
+- Tests unitarios ficam em `src/test/java` no mesmo modulo da classe testada. Espelhe os pacotes e prefira arquivos `*Test.kt`.
+- Arquivos estaticos (`hymns.json`, XMLs, drawables) residem em `android/app/src/main/assets|res`. Evite duplicar recursos em features; sirva-os via repositorios no modulo `core`.
 
-## Build, Test, and Development Commands
-- Install deps: `npm ci` (Node) | `pip install -r requirements.txt` (Python) | `dotnet restore` (.NET).
-- Run locally: `npm run dev` | `python -m src` | `dotnet run`.
-- Build: `npm run build` | `python -m build` | `dotnet build`.
-- Tests: `npm test` (Jest/Vitest) | `pytest` | `dotnet test`.
-- Use `scripts/` helpers when present (e.g., `pwsh scripts/setup.ps1`). Prefer cross‑platform commands.
+## Fluxo de desenvolvimento
+- Use Android Studio Koala/Jellyfish ou a CLI com o Gradle Wrapper (`./gradlew` ou `.\gradlew`). Nao instale plugins globais.
+- Configuracao minima: JDK 17, SDK 35 e `local.properties` apontando para o SDK. Execute builds/tests sempre a partir de `android/`.
+- Rode `./gradlew :app:assembleDebug` para validar builds e `./gradlew :app:installDebug` para publicar no device/emulador selecionado.
+- Live Edit/Preview do Compose so para prototipar; confirme qualquer mudanca executando o app completo.
 
-## Coding Style & Naming Conventions
-- Indentation: 2 spaces (JS/TS), 4 spaces (Python), editorconfig respected when present.
-- Naming: files and folders kebab‑case (`meeting-minutes/`), classes PascalCase, functions/variables camelCase, constants SCREAMING_SNAKE_CASE.
-- Formatting/Linting: Prettier + ESLint (Node), Black + isort + Ruff (Python). Run before pushing: `npm run lint && npm run format` or `ruff check . && black .`.
+## Estilo de codigo e qualidade
+- Siga o estilo oficial do Kotlin (indentacao de 4 espacos, imports ordenados). Formate com Android Studio (`Code > Reformat`) antes do commit.
+- Componentes Compose devem ser pequenos, estaveis e livres de logica de negocio; mantenha regras em view models/repositorios. Exponha `StateFlow<T>` e consuma via `collectAsStateWithLifecycle`.
+- Os modulos `core` sao livres de dependencias de UI; compartilhe modelos via `core:data` e injete dependencias com modules Hilt dedicados.
+- Use camelCase para variaveis/funcoes, PascalCase para classes e kebab-case para pastas Gradle. Strings de UI permanecem em portugues.
 
-## Testing Guidelines
-- Co‑locate tests under `tests/` mirroring `src/` paths.
-- Name tests `*.spec.ts`/`*.test.ts` (Node), `test_*.py` (Python), or `*.Tests.cs` (.NET).
-- Aim for meaningful coverage on core modules; add edge‑case tests for date/time, i18n, and file I/O.
+## Build, lint e testes
+- Antes de abrir PR execute:
+  - `./gradlew lintDebug`
+  - `./gradlew :core:database:test`
+  - `./gradlew :feature:meetings:test`
+- Toda nova regra (validacao de formulario, posicionamento de hino, backup/restore) precisa de teste no modulo correspondente.
+- Alterou sincronizacao/backup? Valide manualmente na tela de backup e inclua prints/logs no PR.
 
-## Commit & Pull Request Guidelines
-- Use Conventional Commits (e.g., `feat: add agenda export` / `fix: correct pagination` / `chore: update deps`).
-- PRs must include: concise description, linked issue (if any), screenshots/CLI output for UX/CLI changes, and notes on tests added/updated.
-- Keep PRs focused and small; avoid drive‑by refactors.
+## Documentacao e rastreabilidade
+- Atualize `README.md` ao alterar arquitetura, comandos ou fluxos de usuario. Use `docs/` para guias longos quando necessario.
+- Commits seguem Conventional Commits (`feat:`, `fix:`, `chore:`, ...). PRs precisam de descricao objetiva, link para issue (se houver), evidencias visuais/CLI e checklist dos testes executados.
 
-## Security & Configuration Tips
-- Never commit secrets. Store env in `.env` and document in `.env.example`.
-- Prefer parameterized configs in `config/`; validate inputs at boundaries.
+## Seguranca e configuracao
+- Nunca versione chaves ou senhas. Caminhos de SDK/keystore ficam em `local.properties` ou variaveis de ambiente. Dados sensiveis de Drive/DataStore permanecem somente no dispositivo.
+- Parametrize caminhos/IDs externos via configuracao e valide entrada de Intents/URIs antes de tocar o sistema de arquivos.
 
-## Agent‑Specific Instructions
-- Follow this guide for any edits. Keep changes minimal, align with existing patterns, and update tests/docs when touching behavior.
+## Instrucoes finais
+- Priorize entregas incrementais, siga os padroes do modulo tocado e sempre adicione testes e documentacao quando alterar comportamento observavel.

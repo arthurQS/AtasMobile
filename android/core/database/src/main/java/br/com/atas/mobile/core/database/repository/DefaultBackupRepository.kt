@@ -17,7 +17,7 @@ class DefaultBackupRepository @Inject constructor(
 
     override fun status(): Flow<BackupStatus> = settings.status
 
-    override suspend fun enqueue(reason: BackupReason) {
+    override suspend fun enqueue(reason: BackupReason): Result<Unit> {
         settings.markAttempt(reason)
         val result = coordinator.backupNow()
         if (result.isSuccess) {
@@ -25,6 +25,7 @@ class DefaultBackupRepository @Inject constructor(
         } else {
             settings.markFailure()
         }
+        return result
     }
 
     override suspend fun restoreLatest(): Result<Unit> {

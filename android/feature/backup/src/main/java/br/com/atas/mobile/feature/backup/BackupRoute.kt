@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,9 +46,18 @@ fun BackupRoute(
     ) { uri ->
         uri?.let { viewModel.importLocal(it) }
     }
+    val driveFolderLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocumentTree()
+    ) { uri ->
+        uri?.let { viewModel.connectDriveFolder(it) }
+    }
 
     BackupScreen(
         message = uiState.localMessage,
+        driveMessage = uiState.driveMessage,
+        driveFolderName = uiState.driveFolderName,
+        isDriveLinked = uiState.isDriveLinked,
+        isDriveBusy = uiState.isDriveBusy,
         onBack = onBack,
         onExportLocal = {
             val defaultName = "atas-backup-${LocalDate.now()}.zip"
@@ -53,7 +65,10 @@ fun BackupRoute(
         },
         onImportLocal = {
             importLauncher.launch(arrayOf("application/zip"))
-        }
+        },
+        onSelectDriveFolder = { driveFolderLauncher.launch(null) },
+        onUploadDrive = { viewModel.uploadDriveBackup() },
+        onSyncDrive = { viewModel.syncFromDrive() }
     )
 }
 
@@ -61,9 +76,16 @@ fun BackupRoute(
 @Composable
 fun BackupScreen(
     message: String?,
+    driveMessage: String?,
+    driveFolderName: String?,
+    isDriveLinked: Boolean,
+    isDriveBusy: Boolean,
     onBack: () -> Unit,
     onExportLocal: () -> Unit,
     onImportLocal: () -> Unit,
+    onSelectDriveFolder: () -> Unit,
+    onUploadDrive: () -> Unit,
+    onSyncDrive: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -106,6 +128,47 @@ fun BackupScreen(
             ) {
                 Icon(imageVector = Icons.Default.Restore, contentDescription = null)
                 Text(text = "Restaurar de arquivo local", modifier = Modifier.padding(start = 8.dp))
+            }
+            Text(
+                text = "Google Drive",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Text(
+                text = driveFolderName?.let { "Pasta selecionada: $it" } ?: "Nenhuma pasta selecionada.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            driveMessage?.let {
+                Text(text = it, color = MaterialTheme.colorScheme.primary)
+            }
+            Button(
+                onClick = onSelectDriveFolder,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(imageVector = Icons.Default.Cloud, contentDescription = null)
+                Text(text = "Selecionar pasta do Google Drive", modifier = Modifier.padding(start = 8.dp))
+            }
+            Button(
+                onClick = onUploadDrive,
+                enabled = isDriveLinked && !isDriveBusy,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(imageVector = Icons.Default.CloudUpload, contentDescription = null)
+                Text(
+                    text = if (isDriveBusy) "Enviando..." else "Salvar no Google Drive",
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+            Button(
+                onClick = onSyncDrive,
+                enabled = isDriveLinked && !isDriveBusy,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(imageVector = Icons.Default.Sync, contentDescription = null)
+                Text(
+                    text = if (isDriveBusy) "Sincronizando..." else "Sincronizar agora",
+                    modifier = Modifier.padding(start = 8.dp)
+                )
             }
         }
     }

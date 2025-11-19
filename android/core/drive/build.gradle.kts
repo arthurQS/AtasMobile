@@ -23,6 +23,8 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.datastore)
+    implementation(libs.androidx.documentfile)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.timber)
     implementation(libs.hilt.android)

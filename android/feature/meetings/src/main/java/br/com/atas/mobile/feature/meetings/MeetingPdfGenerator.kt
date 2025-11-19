@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.math.max
 
 class MeetingPdfGenerator {
 
@@ -30,7 +31,7 @@ class MeetingPdfGenerator {
         state.drawSection("Sacramento") { drawSacramento(meeting.details) }
         state.drawSection("Discursos") { drawDiscursos(meeting.details) }
         state.drawSection("Encerramento") { drawEncerramento(meeting.details) }
-        state.drawSection("Observações") { drawParagraph(meeting.details.observacoes) }
+        state.drawSection("Observacoes") { drawParagraph(meeting.details.observacoes) }
 
         state.finish()
 
@@ -48,7 +49,7 @@ class MeetingPdfGenerator {
     private inner class PdfState(private val document: PdfDocument) {
         private val titlePaint = Paint().apply {
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-            textSize = 20f
+            textSize = 22f
         }
         private val sectionPaint = Paint().apply {
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
@@ -67,29 +68,36 @@ class MeetingPdfGenerator {
         }
 
         private var pageIndex = 1
-        private var page = document.startPage(PdfDocument.PageInfo.Builder(PAGE_WIDTH, PAGE_HEIGHT, pageIndex).create())
+        private var page =
+            document.startPage(PdfDocument.PageInfo.Builder(PAGE_WIDTH, PAGE_HEIGHT, pageIndex).create())
         private var canvas = page.canvas
         private var cursorY = TOP_MARGIN
 
         fun drawHeader(meeting: Meeting) {
-            drawLargeTitle(meeting.title.ifBlank { "Ata da Reunião" })
-            drawParagraph(formatDate(meeting.date))
-            drawParagraph("Gerada em ${formatDate(LocalDate.now().toString())}")
-            cursorY += 12f
+            val title = meeting.title.ifBlank { "Ata da Reuniao" }
+            drawCenteredLine(title, titlePaint, spacingAfter = 26f)
+            formatDate(meeting.date)
+                .takeIf { it.isNotBlank() }
+                ?.let { drawCenteredLine(it, valuePaint, spacingAfter = 18f) }
             canvas.drawLine(MARGIN_START, cursorY, PAGE_WIDTH - MARGIN_START, cursorY, dividerPaint)
             cursorY += 20f
         }
 
         fun drawGeneralSection(meeting: Meeting) {
-            drawSection("Informações gerais") {
-                drawPair("Órgão", meeting.details.orgao)
-                drawPair("Ala", meeting.details.ala)
-                drawPair("Tipo", meeting.details.tipo)
-                drawPair("Frequência", meeting.details.frequencia)
-                drawPair("Preside", meeting.details.preside)
-                drawPair("Dirige", meeting.details.dirige)
-                drawPair("Organista", meeting.details.organista)
-                drawPair("Regente", meeting.details.regente)
+            drawSection("Informacoes gerais") {
+                drawInfoGrid(
+                    listOf(
+                        "Data" to formatDate(meeting.date),
+                        "Orgao" to meeting.details.orgao,
+                        "Ala" to meeting.details.ala,
+                        "Tipo" to meeting.details.tipo,
+                        "Frequencia" to meeting.details.frequencia,
+                        "Preside" to meeting.details.preside,
+                        "Dirige" to meeting.details.dirige,
+                        "Organista" to meeting.details.organista,
+                        "Regente" to meeting.details.regente
+                    )
+                )
             }
         }
 
@@ -104,12 +112,13 @@ class MeetingPdfGenerator {
         }
 
         inner class SectionScope {
+
             fun drawPair(label: String, value: String?) {
-                if (value.isNullOrBlank()) return
+                val safeValue = value?.trim().takeUnless { it.isNullOrEmpty() } ?: return
                 ensureSpace(32f)
                 canvas.drawText(label, MARGIN_START, cursorY, labelPaint)
                 cursorY += 16f
-                wrapText(valuePaint, value).forEach { line ->
+                wrapText(valuePaint, safeValue).forEach { line ->
                     ensureSpace(0f)
                     canvas.drawText(line, MARGIN_START, cursorY, valuePaint)
                     cursorY += 16f
@@ -128,24 +137,14 @@ class MeetingPdfGenerator {
                 cursorY += 4f
             }
 
-            fun drawSpeakers(details: MeetingDetails) {
-                if (details.oradores.isEmpty()) {
-                    drawParagraph("Reunião de Testemunhos")
-                    return
-                }
-                details.oradores.forEachIndexed { index, speaker ->
-                    drawPair("Orador ${index + 1}", formatSpeakerLine(speaker))
-                }
-            }
-
             fun drawAbertura(details: MeetingDetails) {
+                drawPair("Anuncios", details.anuncios)
                 drawPair("Hino de abertura", details.hinos.abertura)
-                drawPair("Oração de abertura", details.oracoes.abertura)
-                drawPair("Anúncios", details.anuncios)
+                drawPair("Oracao de abertura", details.oracoes.abertura)
             }
 
             fun drawChamados(details: MeetingDetails) {
-                drawPair("Desobrigações", details.desobrigacoes)
+                drawPair("Desobrigacoes", details.desobrigacoes)
                 drawPair("Chamados, apoios e boas-vindas", details.chamados)
             }
 
@@ -155,33 +154,83 @@ class MeetingPdfGenerator {
             }
 
             fun drawDiscursos(details: MeetingDetails) {
-                drawSpeakers(details)
-                drawPair("Hino intermediário", details.hinos.intermediario)
+                val speakers = details.oradores
+                if (speakers.isEmpty()) {
+                    drawParagraph("Reuniao de Testemunhos")
+                    drawPair("Hino intermediario", details.hinos.intermediario)
+                    return
+                }
+
+                val hymnPlacement = calculateHymnPlacement(speakers)
+                speakers.forEachIndexed { index, speaker ->
+                    drawPair("Orador ${index + 1}", formatSpeakerLine(speaker))
+                    if (hymnPlacement?.insertAfterIndex == index) {
+                        drawPair("Hino intermediario", details.hinos.intermediario)
+                    }
+                }
             }
 
             fun drawEncerramento(details: MeetingDetails) {
                 drawPair("Hino de encerramento", details.hinos.encerramento)
-                drawPair("Oração de encerramento", details.oracoes.encerramento)
+                drawPair("Oracao de encerramento", details.oracoes.encerramento)
+            }
+
+            fun drawInfoGrid(items: List<Pair<String, String?>>) {
+                val displayItems = items.mapNotNull { (label, value) ->
+                    value?.takeIf { it.isNotBlank() }?.let { label to it.trim() }
+                }
+                if (displayItems.isEmpty()) return
+
+                val columns = INFO_GRID_COLUMNS
+                val maxRows = GRID_MAX_ROWS
+                val limitedItems = displayItems.take(columns * maxRows)
+                val rows = limitedItems.chunked(columns)
+                val columnSpacing = 24f
+                val availableWidth = PAGE_WIDTH - MARGIN_START * 2
+                val columnWidth = (availableWidth - columnSpacing * (columns - 1)) / columns
+
+                rows.forEach { row ->
+                    val cells = row.map { (label, value) ->
+                        val labelLines = wrapText(labelPaint, label, columnWidth)
+                        val valueLines = wrapText(valuePaint, value, columnWidth)
+                        val contentHeight =
+                            (labelLines.size * LABEL_LINE_HEIGHT) +
+                                (valueLines.size * VALUE_LINE_HEIGHT) +
+                                CELL_PADDING
+                        PdfGridCell(labelLines, valueLines, max(contentHeight, MIN_GRID_ROW_HEIGHT))
+                    }
+                    val rowHeight = cells.maxOfOrNull { it.height } ?: MIN_GRID_ROW_HEIGHT
+                    ensureSpace(rowHeight + GRID_ROW_SPACING)
+
+                    cells.forEachIndexed { columnIndex, cell ->
+                        val startX = MARGIN_START + columnIndex * (columnWidth + columnSpacing)
+                        var textBaseline = cursorY
+                        cell.labelLines.forEach { line ->
+                            canvas.drawText(line, startX, textBaseline, labelPaint)
+                            textBaseline += LABEL_LINE_HEIGHT
+                        }
+                        textBaseline += 2f
+                        cell.valueLines.forEach { line ->
+                            canvas.drawText(line, startX, textBaseline, valuePaint)
+                            textBaseline += VALUE_LINE_HEIGHT
+                        }
+                    }
+                    cursorY += rowHeight + GRID_ROW_SPACING
+                }
             }
         }
 
         private fun formatSpeakerLine(speaker: MeetingSpeaker): String {
-            val nome = speaker.nome.ifBlank { "Nome não informado" }
-            val assunto = speaker.assunto.takeUnless { it.isBlank() }?.let { " • $it" } ?: ""
-            return "$nome$assunto"
+            val name = speaker.nome.ifBlank { "Nome nao informado" }
+            val topic = speaker.assunto.takeUnless { it.isBlank() }?.let { " - $it" } ?: ""
+            return "$name$topic"
         }
 
-        private fun drawLargeTitle(text: String) {
-            canvas.drawText(text, MARGIN_START, cursorY, titlePaint)
-            cursorY += 26f
-        }
-
-        private fun drawParagraph(text: String) {
-            wrapText(valuePaint, text).forEach { line ->
-                canvas.drawText(line, MARGIN_START, cursorY, valuePaint)
-                cursorY += 16f
-                ensureSpace(0f)
-            }
+        private fun drawCenteredLine(text: String, paint: Paint, spacingAfter: Float) {
+            ensureSpace(paint.textSize + spacingAfter)
+            val x = (PAGE_WIDTH - paint.measureText(text)) / 2f
+            canvas.drawText(text, x, cursorY, paint)
+            cursorY += spacingAfter
         }
 
         private fun ensureSpace(extra: Float) {
@@ -207,13 +256,14 @@ class MeetingPdfGenerator {
         }
     }
 
-    private fun wrapText(paint: Paint, text: String): List<String> {
+    private fun wrapText(paint: Paint, text: String, maxWidth: Float = PAGE_WIDTH - MARGIN_START * 2): List<String> {
+        if (text.isEmpty()) return emptyList()
         val lines = mutableListOf<String>()
         val words = text.split(" ")
         var currentLine = StringBuilder()
         for (word in words) {
             val candidate = if (currentLine.isEmpty()) word else "${currentLine} $word"
-            if (paint.measureText(candidate) > (PAGE_WIDTH - MARGIN_START * 2)) {
+            if (paint.measureText(candidate) > maxWidth && currentLine.isNotEmpty()) {
                 lines.add(currentLine.toString())
                 currentLine = StringBuilder(word)
             } else {
@@ -237,6 +287,13 @@ class MeetingPdfGenerator {
         private const val PAGE_HEIGHT = 842
         private const val TOP_MARGIN = 48f
         private const val MARGIN_START = 40f
+        private const val LABEL_LINE_HEIGHT = 14f
+        private const val VALUE_LINE_HEIGHT = 16f
+        private const val GRID_ROW_SPACING = 8f
+        private const val CELL_PADDING = 6f
+        private const val MIN_GRID_ROW_HEIGHT = 28f
+        private const val INFO_GRID_COLUMNS = 3
+        private const val GRID_MAX_ROWS = 4
 
         fun formatDate(raw: String?): String {
             if (raw.isNullOrBlank()) return ""
@@ -247,3 +304,9 @@ class MeetingPdfGenerator {
         }
     }
 }
+
+private data class PdfGridCell(
+    val labelLines: List<String>,
+    val valueLines: List<String>,
+    val height: Float
+)
