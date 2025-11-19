@@ -1,7 +1,6 @@
 package br.com.atas.mobile.feature.backup
 
 import android.net.Uri
-import android.provider.DocumentsContract
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -69,7 +68,7 @@ fun BackupRoute(
             importLauncher.launch(arrayOf("application/zip"))
         },
         onSelectDriveFolder = {
-            driveFolderLauncher.launch(resolveDriveInitialUri(uiState.driveFolderUri))
+            driveFolderLauncher.launch(resolveDriveInitialUri(uiState.driveFolderUri, uiState.driveDefaultUri))
         },
         onUploadDrive = { viewModel.uploadDriveBackup() },
         onSyncDrive = { viewModel.syncFromDrive() }
@@ -178,9 +177,6 @@ fun BackupScreen(
     }
 }
 
-private fun resolveDriveInitialUri(savedUri: String?): Uri? =
-    savedUri?.let(Uri::parse) ?: defaultDriveRoot()
-
-private fun defaultDriveRoot(): Uri? = runCatching {
-    DocumentsContract.buildRootUri("com.google.android.apps.docs.storage", "root")
-}.getOrNull()
+private fun resolveDriveInitialUri(savedUri: String?, defaultUri: String?): Uri? =
+    savedUri?.let(Uri::parse)
+        ?: defaultUri?.let(Uri::parse)

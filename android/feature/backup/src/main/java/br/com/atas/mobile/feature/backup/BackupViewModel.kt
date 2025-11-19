@@ -3,6 +3,7 @@ package br.com.atas.mobile.feature.backup
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.provider.DocumentsContract
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -46,6 +47,10 @@ class BackupViewModel @Inject constructor(
                     )
                 }
             }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            val defaultDriveUri = resolveDriveRootUri()
+            _uiState.update { it.copy(driveDefaultUri = defaultDriveUri) }
         }
     }
 
@@ -161,5 +166,27 @@ class BackupViewModel @Inject constructor(
 
     companion object {
         private const val DATABASE_NAME = "atas.db"
+        private const val DRIVE_AUTHORITY = "com.google.android.apps.docs.storage"
+        private const val DRIVE_DEFAULT_ROOT = "root"
     }
+
+    private fun resolveDriveRootUri(): String? = runCatching {
+        val rootsUri = DocumentsContract.buildRootsUri(DRIVE_AUTHORITY)
+        context.contentResolver.query(
+            rootsUri,
+            arrayOf(DocumentsContract.Root.COLUMN_DOCUMENT_ID),
+            null,
+            null,
+            null
+        )?.use { cursor ->
+            val columnIndex = cursor.getColumnIndex(DocumentsContract.Root.COLUMN_DOCUMENT_ID)
+            while (cursor.moveToNext()) {
+                val documentId = cursor.getString(columnIndex) ?: continue
+                if (documentId.isNotBlank()) {
+                    return DocumentsContract.buildTreeDocumentUri(DRIVE_AUTHORITY, documentId).toString()
+                }
+            }
+        }
+        DocumentsContract.buildTreeDocumentUri(DRIVE_AUTHORITY, DRIVE_DEFAULT_ROOT).toString()
+    }.getOrNull()
 }
