@@ -1,0 +1,20 @@
+# DocumentPurpose
+
+Central index of project documentation and how to use it.
+
+## Core docs (always relevant)
+- PROJECT.md: Vision, goals, scope.
+- STACK.md: Languages, frameworks, dependencies.
+- ARCHITECTURE.md: Patterns, layers, data flow.
+- STRUCTURE.md: Directory layout and where things live.
+- CONVENTIONS.md: Code style and naming patterns.
+- TESTING.md: Test frameworks and patterns.
+- INTEGRATIONS.md: External services and APIs.
+- CONCERNS.md: Tech debt, fragile areas, known issues.
+- REQUIREMENTS.md: Scoped v1/v2 requirements with traceability.
+- ROADMAP.md: Phases from start to finish, mapped to requirements.
+- PLAN.md: Atomic task plan with XML structure.
+- STATE.md: Decisions, blockers, and position memory across sessions.
+- SUMMARY.md: What happened and what changed per session.
+- research/: Ecosystem knowledge (stack, features, architecture, pitfalls).
+- todos/: Captured ideas and tasks for later work.
