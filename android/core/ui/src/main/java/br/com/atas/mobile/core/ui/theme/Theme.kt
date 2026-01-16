@@ -28,7 +28,7 @@ private val DarkColors = darkColorScheme(
 )
 
 @Composable
-fun AtasTheme(
+fun AgendaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
@@ -60,7 +60,7 @@ fun AtasTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = AtasTypography,
+        typography = AgendaTypography,
         content = content
     )
 }

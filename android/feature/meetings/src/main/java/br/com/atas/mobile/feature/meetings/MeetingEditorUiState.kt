@@ -2,6 +2,8 @@ package br.com.atas.mobile.feature.meetings
 
 import br.com.atas.mobile.core.data.model.Hymn
 import br.com.atas.mobile.core.data.model.MeetingDetails
+import br.com.atas.mobile.core.data.repository.SyncState
+import br.com.atas.mobile.core.data.repository.SyncStatus
 
 data class MeetingEditorUiState(
     val meetingId: Long? = null,
@@ -11,5 +13,6 @@ data class MeetingEditorUiState(
     val createdAt: String? = null,
     val hymns: List<Hymn> = emptyList(),
     val isSaving: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val syncStatus: SyncStatus = SyncStatus(SyncState.DISABLED)
 )

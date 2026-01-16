@@ -14,13 +14,14 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AtasMobile"
+rootProject.name = "AgendaMobile"
 
 include(
     ":app",
     ":core:data",
     ":core:database",
     ":core:drive",
+    ":core:sync",
     ":core:ui",
     ":feature:meetings",
     ":feature:backup"

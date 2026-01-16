@@ -7,6 +7,7 @@ import br.com.atas.mobile.core.data.model.Meeting
 import br.com.atas.mobile.core.data.model.MeetingDetails
 import br.com.atas.mobile.core.data.repository.HymnRepository
 import br.com.atas.mobile.core.data.repository.MeetingRepository
+import br.com.atas.mobile.core.data.repository.SyncRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import javax.inject.Inject
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 class MeetingEditorViewModel @Inject constructor(
     private val meetingRepository: MeetingRepository,
     private val hymnRepository: HymnRepository,
+    private val syncRepository: SyncRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -51,6 +53,12 @@ class MeetingEditorViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            syncRepository.observeStatus().collect { status ->
+                _uiState.update { it.copy(syncStatus = status) }
+            }
+        }
+
+        viewModelScope.launch {
             hymnRepository.watchAll().collect { list ->
                 if (list.isNotEmpty()) {
                     _uiState.update { it.copy(hymns = list) }
@@ -79,7 +87,7 @@ class MeetingEditorViewModel @Inject constructor(
     fun save(onSuccess: (Long) -> Unit) {
         val current = _uiState.value
         if (current.date.isBlank() || current.title.isBlank()) {
-            _uiState.update { it.copy(errorMessage = "Preencha data e título") }
+            _uiState.update { it.copy(errorMessage = "Preencha data e titulo") }
             return
         }
         viewModelScope.launch {
@@ -95,6 +103,7 @@ class MeetingEditorViewModel @Inject constructor(
                 meetingRepository.upsert(meeting)
             }
                 .onSuccess { id ->
+                    syncRepository.pushAgenda(meeting.copy(id = id))
                     _uiState.update { it.copy(isSaving = false) }
                     onSuccess(id)
                 }

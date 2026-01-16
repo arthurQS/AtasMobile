@@ -28,7 +28,7 @@ class DriveDocumentBackupCoordinator @Inject constructor(
     override suspend fun backupNow(): Result<Unit> = runCatching {
         val folder = resolveFolder()
         val tempZip = createBackupZip()
-        val backupName = "atas-backup-${timestamp()}.zip"
+        val backupName = "agenda-backup-${timestamp()}.zip"
         folder.findFile(backupName)?.delete()
         val driveFile = folder.createFile(MIME_ZIP, backupName)
             ?: error("Nao foi possivel criar o arquivo no Google Drive.")
@@ -61,7 +61,7 @@ class DriveDocumentBackupCoordinator @Inject constructor(
         val dbFile = context.getDatabasePath(DATABASE_NAME)
         val walFile = File(dbFile.parentFile, "$DATABASE_NAME-wal")
         val shmFile = File(dbFile.parentFile, "$DATABASE_NAME-shm")
-        val tempFile = File.createTempFile("atas-backup", ".zip", context.cacheDir)
+        val tempFile = File.createTempFile("agenda-backup", ".zip", context.cacheDir)
         ZipOutputStream(FileOutputStream(tempFile)).use { zip ->
             listOf(dbFile, walFile, shmFile).filter { it.exists() }.forEach { file ->
                 zip.putNextEntry(ZipEntry(file.name))

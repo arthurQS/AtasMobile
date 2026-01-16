@@ -74,7 +74,7 @@ class MeetingPdfGenerator {
         private var cursorY = TOP_MARGIN
 
         fun drawHeader(meeting: Meeting) {
-            val title = meeting.title.ifBlank { "Ata da Reuniao" }
+            val title = meeting.title.ifBlank { "Agenda da Reuniao" }
             drawCenteredLine(title, titlePaint, spacingAfter = 26f)
             formatDate(meeting.date)
                 .takeIf { it.isNotBlank() }
@@ -275,7 +275,7 @@ class MeetingPdfGenerator {
     }
 
     private fun createOutputFile(context: Context, meeting: Meeting): File {
-        val safeTitle = meeting.title.ifBlank { "Ata" }
+        val safeTitle = meeting.title.ifBlank { "Agenda" }
             .replace(Regex("[^A-Za-z0-9_-]"), "_")
         val fileName = "${safeTitle}-${meeting.date}.pdf"
         val dir = File(context.cacheDir, "exports").apply { if (!exists()) mkdirs() }

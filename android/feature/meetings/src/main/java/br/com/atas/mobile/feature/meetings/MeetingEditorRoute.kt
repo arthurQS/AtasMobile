@@ -76,6 +76,8 @@ import br.com.atas.mobile.core.data.model.Hymn
 import br.com.atas.mobile.core.data.model.MeetingDetails
 import br.com.atas.mobile.core.data.model.Meeting
 import br.com.atas.mobile.core.data.model.MeetingSpeaker
+import br.com.atas.mobile.core.data.repository.SyncState
+import br.com.atas.mobile.core.data.repository.SyncStatus
 import kotlinx.coroutines.launch
 
 @Composable
@@ -120,7 +122,7 @@ fun MeetingEditorScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Nova ata") },
+                title = { Text("Nova agenda") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Voltar")
@@ -325,7 +327,7 @@ fun MeetingEditorScreen(
 
             SectionCard(
                 title = "Observações",
-                subtitle = "Notas adicionais para a ata",
+                subtitle = "Notas adicionais para a agenda",
                 icon = Icons.Default.Info
             ) {
                 OutlinedTextField(
@@ -340,6 +342,7 @@ fun MeetingEditorScreen(
             MeetingFooterActions(
                 isSaving = state.isSaving,
                 errorMessage = state.errorMessage,
+                syncStatus = state.syncStatus,
                 onSave = onSave
             )
         }
@@ -350,6 +353,7 @@ fun MeetingEditorScreen(
 private fun MeetingFooterActions(
     isSaving: Boolean,
     errorMessage: String?,
+    syncStatus: SyncStatus,
     onSave: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -360,12 +364,30 @@ private fun MeetingFooterActions(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
+        if (syncStatus.state != SyncState.DISABLED) {
+            val message = syncStatus.message?.takeIf { it.isNotBlank() }
+            val label = when (syncStatus.state) {
+                SyncState.CONNECTED -> "Sincronizacao conectada"
+                SyncState.ERROR -> "Erro de sincronizacao"
+                SyncState.CONFLICT -> "Conflito de sincronizacao"
+                SyncState.DISABLED -> "Sincronizacao desativada"
+            }
+            Text(
+                text = message?.let { "$label: $it" } ?: label,
+                color = if (syncStatus.state == SyncState.ERROR || syncStatus.state == SyncState.CONFLICT) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                },
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
         Button(
             onClick = onSave,
             enabled = !isSaving,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(if (isSaving) "Salvando..." else "Salvar ata")
+            Text(if (isSaving) "Salvando..." else "Salvar agenda")
         }
         Text(
             text = "Uma cópia local é salva automaticamente e pode ser enviada ao Google Drive nas configurações.",
@@ -381,7 +403,7 @@ private fun MeetingHeaderCard(
     state: MeetingEditorUiState,
     details: MeetingDetails
 ) {
-    val title = state.title.ifBlank { "Ata sem título" }
+    val title = state.title.ifBlank { "Agenda sem título" }
     val dateLabel = if (state.date.isBlank()) "Data ainda não informada" else "Prevista para ${state.date}"
     val createdAt = state.createdAt?.takeIf { it.isNotBlank() }
     val hymnCount = listOf(
@@ -460,7 +482,7 @@ private fun MeetingEditorUiState.toMeeting(): Meeting =
     Meeting(
         id = meetingId ?: 0L,
         date = date,
-        title = title.ifBlank { "Ata" },
+        title = title.ifBlank { "Agenda" },
         details = details,
         createdAt = createdAt
     )
@@ -471,7 +493,7 @@ private fun sharePdf(context: Context, uri: Uri) {
         putExtra(Intent.EXTRA_STREAM, uri)
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
-    val chooser = Intent.createChooser(intent, "Compartilhar ata em PDF")
+    val chooser = Intent.createChooser(intent, "Compartilhar agenda em PDF")
     chooser.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     try {
         context.startActivity(chooser)

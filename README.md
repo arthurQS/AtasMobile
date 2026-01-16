@@ -1,14 +1,14 @@
-# Atas Mobile (Android)
+# Agenda Mobile (Android)
 
-Aplicativo Android nativo para criacao e consulta das atas da reuniao sacramental. O app e offline-first, escrito em Kotlin com Jetpack Compose, Hilt, Room, DataStore e sincronizacao opcional via Google Drive/Storage Access Framework.
+Aplicativo Android nativo para criacao e consulta das agendas da reuniao sacramental. O app e offline-first, escrito em Kotlin com Jetpack Compose, Hilt, Room, DataStore e sincronizacao opcional via Google Drive/Storage Access Framework.
 
 ## Arquitetura modular
-- `android/app`: container principal. Exibe o `AtasApp`, configura Hilt, Navigation Compose e agrega os demais modulos.
-- `core:data`: modelos serializaveis (atas, hinos, backup) e contratos de repositario.
+- `android/app`: container principal. Exibe o `AgendaApp`, configura Hilt, Navigation Compose e agrega os demais modulos.
+- `core:data`: modelos serializaveis (agendas, hinos, backup) e contratos de repositario.
 - `core:database`: implementacao Room + DataStore (`MeetingDao`, `OfflineMeetingRepository`, `AssetHymnRepository`, `BackupSettingsDataStore`, adapters JSON).
 - `core:drive`: integracoes com DocumentFile/SAF (`DriveDocumentBackupCoordinator`, `DriveFolderSettingsDataStore`).
-- `core:ui`: tema Compose compartilhado (cores, tipografia, `AtasTheme`).
-- `feature:meetings`: lista e editor de atas (`MeetingsRoute`, `MeetingEditorRoute`, regras de hinos, gerador de PDF).
+- `core:ui`: tema Compose compartilhado (cores, tipografia, `AgendaTheme`).
+- `feature:meetings`: lista e editor de agendas (`MeetingsRoute`, `MeetingEditorRoute`, regras de hinos, gerador de PDF).
 - `feature:backup`: tela dedicada a backup/restore local e sincronizacao manual com Drive.
 
 Cada modulo possui `src/main` e `src/test`. Os testes unitarios rodam via Gradle (`./gradlew :core:database:test`, `./gradlew :feature:meetings:test`).
@@ -28,7 +28,8 @@ Cada modulo possui `src/main` e `src/test`. Os testes unitarios rodam via Gradle
 ## Configuracao rapida
 1. Instale o SDK 35 e abra `android/` no Android Studio.
 2. Sincronize o Gradle e confirme o `local.properties`.
-3. Opcional: revise `android/app/src/main/assets/hymns.json` caso adicione novos hinos.
+3. Adicione `android/app/google-services.json` (Firebase) se for usar sincronizacao.
+4. Opcional: revise `android/app/src/main/assets/hymns.json` caso adicione novos hinos.
 
 ## Executando
 ### Android Studio
@@ -50,7 +51,7 @@ Para direcionar o deploy use `adb -s <serial> install -r app/build/outputs/apk/d
   cd android
   .\gradlew :core:database:test
   ```
-- Logica da UI de atas (regras de hinos, PDF, validacoes):
+- Logica da UI de agendas (regras de hinos, PDF, validacoes):
   ```powershell
   cd android
   .\gradlew :feature:meetings:test
@@ -70,5 +71,5 @@ Execute os testes sempre que alterar regras de negocio. Para alteracoes em backu
 
 ## Proximos passos sugeridos
 1. Migrar o `DriveDocumentBackupCoordinator` para a API oficial do Drive (`appDataFolder`).
-2. Adicionar testes instrumentados para criacao/edicao de atas, exportacao de PDF e backup.
+2. Adicionar testes instrumentados para criacao/edicao de agendas, exportacao de PDF e backup.
 3. Documentar pipeline de distribuicao (Play Store/Test Lab) e automatizar builds de release.

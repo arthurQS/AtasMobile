@@ -1,5 +1,8 @@
 package br.com.atas.mobile.feature.meetings
 
+import br.com.atas.mobile.core.data.repository.SyncState
+import br.com.atas.mobile.core.data.repository.SyncStatus
+
 data class MeetingItemUiModel(
     val id: Long,
     val title: String,
@@ -10,5 +13,9 @@ data class MeetingItemUiModel(
 data class MeetingsUiState(
     val isLoading: Boolean = true,
     val meetings: List<MeetingItemUiModel> = emptyList(),
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val syncStatus: SyncStatus = SyncStatus(SyncState.DISABLED),
+    val isSyncDialogOpen: Boolean = false,
+    val wardCode: String = "",
+    val masterPassword: String = ""
 )

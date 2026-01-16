@@ -12,6 +12,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CloudUpload
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.SyncDisabled
+import androidx.compose.material.icons.filled.SyncProblem
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -20,16 +24,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import br.com.atas.mobile.core.data.repository.SyncState
+import br.com.atas.mobile.core.data.repository.SyncStatus
 
 @Composable
 fun MeetingsRoute(
@@ -43,7 +52,12 @@ fun MeetingsRoute(
         state = uiState,
         onOpenBackup = onOpenBackup,
         onCreateMeeting = onCreateMeeting,
-        onMeetingSelected = onMeetingSelected
+        onMeetingSelected = onMeetingSelected,
+        onOpenSync = viewModel::openSyncDialog,
+        onDismissSync = viewModel::dismissSyncDialog,
+        onWardCodeChange = viewModel::onWardCodeChange,
+        onMasterPasswordChange = viewModel::onMasterPasswordChange,
+        onJoinWard = viewModel::joinWard
     )
 }
 
@@ -54,14 +68,34 @@ fun MeetingsScreen(
     onOpenBackup: () -> Unit,
     onCreateMeeting: () -> Unit,
     onMeetingSelected: (Long) -> Unit,
+    onOpenSync: () -> Unit,
+    onDismissSync: () -> Unit,
+    onWardCodeChange: (String) -> Unit,
+    onMasterPasswordChange: (String) -> Unit,
+    onJoinWard: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = "Atas") },
+                title = { Text(text = "Agendas") },
                 actions = {
+                    IconButton(onClick = onOpenSync) {
+                        val icon = when (state.syncStatus.state) {
+                            SyncState.DISABLED -> Icons.Default.SyncDisabled
+                            SyncState.ERROR -> Icons.Default.SyncProblem
+                            SyncState.CONFLICT -> Icons.Default.SyncProblem
+                            SyncState.CONNECTED -> Icons.Default.Sync
+                        }
+                        val label = when (state.syncStatus.state) {
+                            SyncState.DISABLED -> "Sync desativado"
+                            SyncState.ERROR -> "Sync com erro"
+                            SyncState.CONFLICT -> "Sync com conflito"
+                            SyncState.CONNECTED -> "Sync conectado"
+                        }
+                        Icon(imageVector = icon, contentDescription = label)
+                    }
                     IconButton(onClick = onOpenBackup) {
                         Icon(imageVector = Icons.Default.CloudUpload, contentDescription = "Backup")
                     }
@@ -70,7 +104,7 @@ fun MeetingsScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onCreateMeeting) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Nova ata")
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Nova agenda")
             }
         }
     ) { padding ->
@@ -81,6 +115,18 @@ fun MeetingsScreen(
             contentPadding = PaddingValues(16.dp),
             state = state,
             onMeetingSelected = onMeetingSelected
+        )
+    }
+
+    if (state.isSyncDialogOpen) {
+        SyncDialog(
+            wardCode = state.wardCode,
+            masterPassword = state.masterPassword,
+            syncStatus = state.syncStatus,
+            onWardCodeChange = onWardCodeChange,
+            onMasterPasswordChange = onMasterPasswordChange,
+            onDismiss = onDismissSync,
+            onConfirm = onJoinWard
         )
     }
 }
@@ -98,6 +144,11 @@ private fun MeetingsList(
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        if (state.syncStatus.state != SyncState.DISABLED) {
+            item {
+                SyncStatusCard(state = state.syncStatus)
+            }
+        }
         if (state.isLoading) {
             item {
                 LinearProgressIndicator(
@@ -133,12 +184,12 @@ private fun EmptyStateCard() {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "Nenhuma ata cadastrada",
+                text = "Nenhuma agenda cadastrada",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Toque no botão “+” para criar a primeira ata sacramental.",
+                text = "Toque no botao \"+\" para criar a primeira agenda sacramental.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -180,4 +231,90 @@ private fun MeetingCard(
             )
         }
     }
+}
+
+@Composable
+private fun SyncStatusCard(state: SyncStatus) {
+    val message = state.message?.takeIf { it.isNotBlank() }
+    val title = when (state.state) {
+        SyncState.CONNECTED -> "Sincronizacao conectada"
+        SyncState.ERROR -> "Erro de sincronizacao"
+        SyncState.CONFLICT -> "Conflito de sincronizacao"
+        SyncState.DISABLED -> "Sincronizacao desativada"
+    }
+    Card(
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            if (message != null) {
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SyncDialog(
+    wardCode: String,
+    masterPassword: String,
+    syncStatus: SyncStatus,
+    onWardCodeChange: (String) -> Unit,
+    onMasterPasswordChange: (String) -> Unit,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Conectar sincronizacao") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                OutlinedTextField(
+                    value = wardCode,
+                    onValueChange = onWardCodeChange,
+                    label = { Text("Codigo da unidade") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = masterPassword,
+                    onValueChange = onMasterPasswordChange,
+                    label = { Text("Senha master") },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (syncStatus.state == SyncState.ERROR || syncStatus.state == SyncState.CONFLICT) {
+                    val message = syncStatus.message ?: "Falha ao sincronizar. Verifique os dados."
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text("Conectar")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancelar")
+            }
+        }
+    )
 }

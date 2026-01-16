@@ -61,7 +61,7 @@ fun BackupRoute(
         isDriveBusy = uiState.isDriveBusy,
         onBack = onBack,
         onExportLocal = {
-            val defaultName = "atas-backup-${LocalDate.now()}.zip"
+            val defaultName = "agenda-backup-${LocalDate.now()}.zip"
             exportLauncher.launch(defaultName)
         },
         onImportLocal = {
