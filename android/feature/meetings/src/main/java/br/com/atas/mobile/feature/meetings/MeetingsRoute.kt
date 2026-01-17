@@ -134,6 +134,8 @@ fun MeetingsScreen(
         SyncDialog(
             wardCode = state.wardCode,
             masterPassword = state.masterPassword,
+            isSyncing = state.isSyncing,
+            errorMessage = state.syncDialogError,
             syncStatus = state.syncStatus,
             onWardCodeChange = onWardCodeChange,
             onMasterPasswordChange = onMasterPasswordChange,
@@ -282,6 +284,8 @@ private fun SyncStatusCard(state: SyncStatus) {
 private fun SyncDialog(
     wardCode: String,
     masterPassword: String,
+    isSyncing: Boolean,
+    errorMessage: String?,
     syncStatus: SyncStatus,
     onWardCodeChange: (String) -> Unit,
     onMasterPasswordChange: (String) -> Unit,
@@ -298,6 +302,7 @@ private fun SyncDialog(
                     onValueChange = onWardCodeChange,
                     label = { Text("Codigo da unidade") },
                     singleLine = true,
+                    enabled = !isSyncing,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
@@ -306,8 +311,16 @@ private fun SyncDialog(
                     label = { Text("Senha master") },
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
+                    enabled = !isSyncing,
                     modifier = Modifier.fillMaxWidth()
                 )
+                errorMessage?.let { message ->
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
                 if (syncStatus.state == SyncState.ERROR || syncStatus.state == SyncState.CONFLICT) {
                     val message = syncStatus.message ?: "Falha ao sincronizar. Verifique os dados."
                     Text(
@@ -319,12 +332,12 @@ private fun SyncDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("Conectar")
+            TextButton(onClick = onConfirm, enabled = !isSyncing) {
+                Text(if (isSyncing) "Conectando..." else "Conectar")
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = onDismiss, enabled = !isSyncing) {
                 Text("Cancelar")
             }
         }
