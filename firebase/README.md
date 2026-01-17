@@ -10,6 +10,11 @@ This folder contains Cloud Functions and Firestore rules for Agenda Mobile.
    - Functions: `firebase deploy --only functions`
    - Rules: `firebase deploy --only firestore:rules`
 
+## Emulators
+- Require Java 21+ (use `JAVA_HOME` apontando para JDK 21/25).
+- Run:
+  - `firebase emulators:exec --config firebase.json --project demo-atasmobile "node tests/rules.test.js"`
+
 ## Node
 - Use Node 18 for Functions and tests (`firebase/.nvmrc`).
 

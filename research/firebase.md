@@ -105,6 +105,11 @@ service cloud.firestore {
 - `firebase/firestore.rules`: regras iniciais de acesso por unidade.
 - `firebase/firebase.json`: configuracao base do Firebase CLI.
 
+## Function Notes
+- `createWard` normaliza `wardCode` (lowercase) e nao sobrescreve unidades existentes.
+- `updateAgenda` valida payload (`title`, `date`, `data`, `status`) e exige role `admin|editor`.
+- `updateAgenda` atualiza `lastActiveAt` do membro.
+
 ## Data Migration
 - `wardId` pode ser slug ou UUID.
 - Para migrar dados locais, criar agenda no Firestore com `version=1`.

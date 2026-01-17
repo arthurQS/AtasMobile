@@ -23,10 +23,47 @@ function assertAdmin(context) {
   }
 }
 
+function normalizeWardCode(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function assertPayloadString(value, label) {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new functions.https.HttpsError(
+      "invalid-argument",
+      `${label} is required`
+    );
+  }
+}
+
+function sanitizeAgendaPayload(payload) {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    throw new functions.https.HttpsError("invalid-argument", "Invalid payload");
+  }
+  assertPayloadString(payload.title, "title");
+  assertPayloadString(payload.date, "date");
+  if (!payload.data || typeof payload.data !== "object" || Array.isArray(payload.data)) {
+    throw new functions.https.HttpsError("invalid-argument", "data is required");
+  }
+  const sanitized = {
+    title: payload.title.trim(),
+    date: payload.date.trim(),
+    data: payload.data
+  };
+  if (payload.status) {
+    const status = String(payload.status).trim();
+    if (!["draft", "final"].includes(status)) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid status");
+    }
+    sanitized.status = status;
+  }
+  return sanitized;
+}
+
 exports.createWard = functions.https.onCall(async (data, context) => {
   assertAdmin(context);
   const name = String(data.name || "").trim();
-  const wardCode = String(data.wardCode || "").trim();
+  const wardCode = normalizeWardCode(data.wardCode);
   const password = String(data.password || "").trim();
   if (!name || !wardCode || !password) {
     throw new functions.https.HttpsError("invalid-argument", "Missing fields");
@@ -34,6 +71,10 @@ exports.createWard = functions.https.onCall(async (data, context) => {
   const salt = crypto.randomBytes(16).toString("hex");
   const hash = hashPassword(password, salt);
   const wardRef = admin.firestore().collection("wards").doc(wardCode);
+  const existing = await wardRef.get();
+  if (existing.exists) {
+    throw new functions.https.HttpsError("already-exists", "Ward already exists");
+  }
   await wardRef.set({
     name,
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -45,7 +86,7 @@ exports.createWard = functions.https.onCall(async (data, context) => {
 
 exports.joinWard = functions.https.onCall(async (data, context) => {
   assertSignedIn(context);
-  const wardCode = String(data.wardCode || "").trim();
+  const wardCode = normalizeWardCode(data.wardCode);
   const password = String(data.password || "").trim();
   if (!wardCode || !password) {
     throw new functions.https.HttpsError("invalid-argument", "Missing fields");
@@ -81,9 +122,9 @@ exports.joinWard = functions.https.onCall(async (data, context) => {
 
 exports.updateAgenda = functions.https.onCall(async (data, context) => {
   assertSignedIn(context);
-  const wardId = String(data.wardId || "").trim();
+  const wardId = normalizeWardCode(data.wardId);
   const agendaId = String(data.agendaId || "").trim();
-  const payload = data.payload || {};
+  const payload = sanitizeAgendaPayload(data.payload || {});
   const expectedVersion = Number.isFinite(data.expectedVersion)
     ? Number(data.expectedVersion)
     : null;
@@ -113,6 +154,10 @@ exports.updateAgenda = functions.https.onCall(async (data, context) => {
         "User is not a member"
       );
     }
+    const role = memberSnap.data().role;
+    if (!["admin", "editor"].includes(role)) {
+      throw new functions.https.HttpsError("permission-denied", "Role not allowed");
+    }
     const snap = await tx.get(agendaRef);
     if (!snap.exists) {
       if (expectedVersion && expectedVersion > 0) {
@@ -127,6 +172,9 @@ exports.updateAgenda = functions.https.onCall(async (data, context) => {
         version,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         updatedBy: uid
+      });
+      tx.update(memberRef, {
+        lastActiveAt: admin.firestore.FieldValue.serverTimestamp()
       });
       return { version };
     }
@@ -149,6 +197,9 @@ exports.updateAgenda = functions.https.onCall(async (data, context) => {
       },
       { merge: true }
     );
+    tx.update(memberRef, {
+      lastActiveAt: admin.firestore.FieldValue.serverTimestamp()
+    });
     return { version };
   });
 

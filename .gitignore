@@ -20,3 +20,4 @@ Thumbs.db
 
 # Firebase
 firebase/functions/node_modules/
+firebase/tests/node_modules/
