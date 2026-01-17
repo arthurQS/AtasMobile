@@ -40,7 +40,9 @@ class MeetingsViewModel @Inject constructor(
             syncStatus = syncStatus,
             isSyncDialogOpen = dialog.isOpen,
             wardCode = dialog.wardCode,
-            masterPassword = dialog.masterPassword
+            masterPassword = dialog.masterPassword,
+            isSyncing = dialog.isJoining,
+            syncDialogError = dialog.errorMessage
         )
     }.stateIn(
         scope = viewModelScope,
@@ -53,31 +55,65 @@ class MeetingsViewModel @Inject constructor(
     }
 
     fun openSyncDialog() {
-        dialogState.value = dialogState.value.copy(isOpen = true)
+        dialogState.value = dialogState.value.copy(isOpen = true, errorMessage = null)
     }
 
     fun dismissSyncDialog() {
-        dialogState.value = dialogState.value.copy(isOpen = false, masterPassword = "")
+        dialogState.value = dialogState.value.copy(
+            isOpen = false,
+            masterPassword = "",
+            isJoining = false,
+            errorMessage = null
+        )
     }
 
     fun onWardCodeChange(value: String) {
-        dialogState.value = dialogState.value.copy(wardCode = value)
+        dialogState.value = dialogState.value.copy(wardCode = value, errorMessage = null)
     }
 
     fun onMasterPasswordChange(value: String) {
-        dialogState.value = dialogState.value.copy(masterPassword = value)
+        dialogState.value = dialogState.value.copy(masterPassword = value, errorMessage = null)
     }
 
     fun joinWard() {
         val wardCode = dialogState.value.wardCode.trim()
         val password = dialogState.value.masterPassword
         if (wardCode.isBlank() || password.isBlank()) {
+            dialogState.value = dialogState.value.copy(
+                errorMessage = "Informe codigo e senha"
+            )
             return
         }
         viewModelScope.launch {
-            syncRepository.signInAnonymously()
-            syncRepository.joinWard(wardCode, password)
-            dialogState.value = dialogState.value.copy(isOpen = false, masterPassword = "")
+            dialogState.value = dialogState.value.copy(isJoining = true, errorMessage = null)
+            val signInResult = syncRepository.signInAnonymously()
+            if (signInResult.isFailure) {
+                dialogState.value = dialogState.value.copy(
+                    isJoining = false,
+                    errorMessage = signInResult.exceptionOrNull()?.message
+                        ?: "Falha ao autenticar"
+                )
+                return@launch
+            }
+            val joinResult = syncRepository.joinWard(wardCode, password)
+            if (joinResult.isSuccess) {
+                syncRepository.fetchAgendas()
+                    .onSuccess { meetings ->
+                        meetings.forEach { meetingRepository.upsert(it) }
+                    }
+                dialogState.value = dialogState.value.copy(
+                    isOpen = false,
+                    masterPassword = "",
+                    isJoining = false,
+                    errorMessage = null
+                )
+            } else {
+                dialogState.value = dialogState.value.copy(
+                    isJoining = false,
+                    errorMessage = joinResult.exceptionOrNull()?.message
+                        ?: "Falha ao conectar"
+                )
+            }
         }
     }
 
@@ -93,5 +129,7 @@ class MeetingsViewModel @Inject constructor(
 private data class SyncDialogState(
     val isOpen: Boolean = false,
     val wardCode: String = "",
-    val masterPassword: String = ""
+    val masterPassword: String = "",
+    val isJoining: Boolean = false,
+    val errorMessage: String? = null
 )

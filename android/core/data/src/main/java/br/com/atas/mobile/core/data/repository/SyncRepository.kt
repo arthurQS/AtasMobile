@@ -26,5 +26,7 @@ interface SyncRepository {
     suspend fun signInAnonymously(): Result<String>
     suspend fun joinWard(wardCode: String, masterPassword: String): Result<WardMembership>
     suspend fun pushAgenda(meeting: Meeting): Result<Long>
+    suspend fun fetchAgenda(meetingId: Long): Result<Meeting>
+    suspend fun fetchAgendas(): Result<List<Meeting>>
     fun observeStatus(): Flow<SyncStatus>
 }

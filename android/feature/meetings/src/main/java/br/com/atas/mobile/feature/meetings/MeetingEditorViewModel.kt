@@ -124,4 +124,35 @@ class MeetingEditorViewModel @Inject constructor(
                 }
         }
     }
+
+    fun reloadFromRemote() {
+        val id = _uiState.value.meetingId ?: return
+        viewModelScope.launch {
+            _uiState.update { it.copy(isReloading = true, errorMessage = null) }
+            syncRepository.fetchAgenda(id)
+                .onSuccess { remote ->
+                    val existing = meetingRepository.get(id)
+                    val merged = remote.copy(createdAt = existing?.createdAt)
+                    meetingRepository.upsert(merged)
+                    _uiState.update {
+                        it.copy(
+                            date = merged.date,
+                            title = merged.title,
+                            details = merged.details,
+                            createdAt = merged.createdAt,
+                            syncVersion = merged.syncVersion,
+                            isReloading = false
+                        )
+                    }
+                }
+                .onFailure { throwable ->
+                    _uiState.update {
+                        it.copy(
+                            isReloading = false,
+                            errorMessage = throwable.message ?: "Falha ao recarregar"
+                        )
+                    }
+                }
+        }
+    }
 }

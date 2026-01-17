@@ -17,5 +17,7 @@ data class MeetingsUiState(
     val syncStatus: SyncStatus = SyncStatus(SyncState.DISABLED),
     val isSyncDialogOpen: Boolean = false,
     val wardCode: String = "",
-    val masterPassword: String = ""
+    val masterPassword: String = "",
+    val isSyncing: Boolean = false,
+    val syncDialogError: String? = null
 )

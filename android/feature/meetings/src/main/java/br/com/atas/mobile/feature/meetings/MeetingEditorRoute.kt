@@ -91,7 +91,8 @@ fun MeetingEditorRoute(
         onDateChange = viewModel::updateDate,
         onTitleChange = viewModel::updateTitle,
         onDetailsChange = viewModel::updateDetails,
-        onSave = { viewModel.save(onSaved) }
+        onSave = { viewModel.save(onSaved) },
+        onReloadRemote = viewModel::reloadFromRemote
     )
 }
 
@@ -103,7 +104,8 @@ fun MeetingEditorScreen(
     onDateChange: (String) -> Unit,
     onTitleChange: (String) -> Unit,
     onDetailsChange: (MeetingDetails) -> Unit,
-    onSave: () -> Unit
+    onSave: () -> Unit,
+    onReloadRemote: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val details = state.details
@@ -341,9 +343,11 @@ fun MeetingEditorScreen(
 
             MeetingFooterActions(
                 isSaving = state.isSaving,
+                isReloading = state.isReloading,
                 errorMessage = state.errorMessage,
                 syncStatus = state.syncStatus,
-                onSave = onSave
+                onSave = onSave,
+                onReloadRemote = onReloadRemote
             )
         }
     }
@@ -352,9 +356,11 @@ fun MeetingEditorScreen(
 @Composable
 private fun MeetingFooterActions(
     isSaving: Boolean,
+    isReloading: Boolean,
     errorMessage: String?,
     syncStatus: SyncStatus,
-    onSave: () -> Unit
+    onSave: () -> Unit,
+    onReloadRemote: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         errorMessage?.let {
@@ -382,9 +388,18 @@ private fun MeetingFooterActions(
                 style = MaterialTheme.typography.bodySmall
             )
         }
+        if (syncStatus.state == SyncState.CONFLICT) {
+            OutlinedButton(
+                onClick = onReloadRemote,
+                enabled = !isSaving && !isReloading,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(if (isReloading) "Recarregando..." else "Recarregar remoto")
+            }
+        }
         Button(
             onClick = onSave,
-            enabled = !isSaving,
+            enabled = !isSaving && !isReloading,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(if (isSaving) "Salvando..." else "Salvar agenda")
