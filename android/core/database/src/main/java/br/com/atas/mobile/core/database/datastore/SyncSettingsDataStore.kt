@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import br.com.atas.mobile.core.data.repository.SyncSettingsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -26,14 +27,25 @@ class SyncSettingsDataStore @Inject constructor(
         prefs[KEY_AUTO_SYNC_INTERVAL] ?: DEFAULT_INTERVAL_MS
     }
 
+    override val lastSyncAt: Flow<String?> = dataStore.data.map { prefs ->
+        prefs[KEY_LAST_SYNC_AT]
+    }
+
     override suspend fun setAutoSyncIntervalMs(value: Long) {
         dataStore.edit { prefs ->
             prefs[KEY_AUTO_SYNC_INTERVAL] = value.coerceAtLeast(MIN_INTERVAL_MS)
         }
     }
 
+    override suspend fun setLastSyncAt(value: String) {
+        dataStore.edit { prefs ->
+            prefs[KEY_LAST_SYNC_AT] = value
+        }
+    }
+
     private companion object {
         val KEY_AUTO_SYNC_INTERVAL = longPreferencesKey("auto_sync_interval_ms")
+        val KEY_LAST_SYNC_AT = stringPreferencesKey("last_sync_at")
         const val DEFAULT_INTERVAL_MS = 120_000L
         const val MIN_INTERVAL_MS = 30_000L
     }

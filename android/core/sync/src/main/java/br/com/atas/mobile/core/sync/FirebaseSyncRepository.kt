@@ -8,6 +8,7 @@ import br.com.atas.mobile.core.data.repository.SyncState
 import br.com.atas.mobile.core.data.repository.SyncStatus
 import br.com.atas.mobile.core.data.repository.WardMembership
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.FirebaseFunctionsException
@@ -21,6 +22,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import java.time.Instant
 
 class FirebaseSyncRepository(
     private val auth: FirebaseAuth,
@@ -178,6 +180,24 @@ class FirebaseSyncRepository(
                 .collection("wards")
                 .document(currentWardId)
                 .collection("agendas")
+                .get()
+                .await()
+            snapshot.documents.map { doc -> snapshotToMeeting(doc) }
+        }.onFailure { error ->
+            status.value = SyncStatus(SyncState.ERROR, error.message)
+        }
+    }
+
+    override suspend fun fetchAgendasSince(lastSyncAt: String): Result<List<Meeting>> {
+        return runCatching {
+            val currentWardId = wardId ?: error("Ward nao vinculada")
+            val instant = Instant.parse(lastSyncAt)
+            val timestamp = Timestamp(instant.epochSecond, instant.nano)
+            val snapshot = firestore
+                .collection("wards")
+                .document(currentWardId)
+                .collection("agendas")
+                .whereGreaterThan("updatedAt", timestamp)
                 .get()
                 .await()
             snapshot.documents.map { doc -> snapshotToMeeting(doc) }

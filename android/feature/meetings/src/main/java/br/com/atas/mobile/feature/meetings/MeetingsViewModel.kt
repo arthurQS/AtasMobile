@@ -16,10 +16,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @HiltViewModel
 class MeetingsViewModel @Inject constructor(
@@ -31,6 +35,7 @@ class MeetingsViewModel @Inject constructor(
     private val dialogState = MutableStateFlow(SyncDialogState())
     private var autoSyncJob: Job? = null
     private var autoSyncIntervalMs: Long? = null
+    private val autoSyncState = MutableStateFlow(false)
 
     val uiState: StateFlow<MeetingsUiState> = combine(
         meetingRepository.streamAll()
@@ -42,15 +47,19 @@ class MeetingsViewModel @Inject constructor(
             }
             .catch { cause -> emit(MeetingsUiState(isLoading = false, errorMessage = cause.message)) },
         syncRepository.observeStatus(),
-        dialogState
-    ) { meetingState, syncStatus, dialog ->
+        dialogState,
+        syncSettingsRepository.lastSyncAt,
+        autoSyncState
+    ) { meetingState, syncStatus, dialog, lastSyncAt, isAutoSyncing ->
         meetingState.copy(
             syncStatus = syncStatus,
             isSyncDialogOpen = dialog.isOpen,
             wardCode = dialog.wardCode,
             masterPassword = dialog.masterPassword,
             isSyncing = dialog.isJoining,
-            syncDialogError = dialog.errorMessage
+            syncDialogError = dialog.errorMessage,
+            lastSyncLabel = formatLastSync(lastSyncAt),
+            isAutoSyncing = isAutoSyncing
         )
     }.stateIn(
         scope = viewModelScope,
@@ -131,6 +140,7 @@ class MeetingsViewModel @Inject constructor(
                 syncRepository.fetchAgendas()
                     .onSuccess { meetings ->
                         meetings.forEach { meetingRepository.upsert(it) }
+                        syncSettingsRepository.setLastSyncAt(Instant.now().toString())
                     }
                 dialogState.value = dialogState.value.copy(
                     isOpen = false,
@@ -159,13 +169,33 @@ class MeetingsViewModel @Inject constructor(
     private fun launchAutoSync(intervalMs: Long): Job {
         return viewModelScope.launch {
             while (isActive) {
-                syncRepository.fetchAgendas()
-                    .onSuccess { meetings ->
+                autoSyncState.value = true
+                val lastSyncAt = syncSettingsRepository.lastSyncAt.firstOrNull()
+                val result = if (lastSyncAt.isNullOrBlank()) {
+                    syncRepository.fetchAgendas()
+                } else {
+                    syncRepository.fetchAgendasSince(lastSyncAt)
+                }
+                result.onSuccess { meetings ->
+                    if (meetings.isNotEmpty()) {
                         meetings.forEach { meetingRepository.upsert(it) }
                     }
+                    syncSettingsRepository.setLastSyncAt(Instant.now().toString())
+                }
+                autoSyncState.value = false
                 delay(intervalMs)
             }
         }
+    }
+
+    private fun formatLastSync(raw: String?): String? {
+        if (raw.isNullOrBlank()) return null
+        return runCatching {
+            val instant = Instant.parse(raw)
+            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+                .withZone(ZoneId.systemDefault())
+            formatter.format(instant)
+        }.getOrNull()
     }
 }
 

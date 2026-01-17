@@ -160,7 +160,11 @@ private fun MeetingsList(
     ) {
         if (state.syncStatus.state != SyncState.DISABLED) {
             item {
-                SyncStatusCard(state = state.syncStatus)
+                SyncStatusCard(
+                    state = state.syncStatus,
+                    lastSyncLabel = state.lastSyncLabel,
+                    isAutoSyncing = state.isAutoSyncing
+                )
             }
         }
         if (state.isLoading) {
@@ -248,13 +252,19 @@ private fun MeetingCard(
 }
 
 @Composable
-private fun SyncStatusCard(state: SyncStatus) {
+private fun SyncStatusCard(state: SyncStatus, lastSyncLabel: String?, isAutoSyncing: Boolean) {
     val message = state.message?.takeIf { it.isNotBlank() }
     val title = when (state.state) {
         SyncState.CONNECTED -> "Sincronizacao conectada"
         SyncState.ERROR -> "Erro de sincronizacao"
         SyncState.CONFLICT -> "Conflito de sincronizacao"
         SyncState.DISABLED -> "Sincronizacao desativada"
+    }
+    val detail = when {
+        state.state == SyncState.CONNECTED && isAutoSyncing -> "Sincronizando..."
+        state.state == SyncState.CONNECTED && !lastSyncLabel.isNullOrBlank() ->
+            "Ultima sync: $lastSyncLabel"
+        else -> null
     }
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
@@ -272,6 +282,13 @@ private fun SyncStatusCard(state: SyncStatus) {
             if (message != null) {
                 Text(
                     text = message,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            detail?.let {
+                Text(
+                    text = it,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

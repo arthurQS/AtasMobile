@@ -19,5 +19,7 @@ data class MeetingsUiState(
     val wardCode: String = "",
     val masterPassword: String = "",
     val isSyncing: Boolean = false,
-    val syncDialogError: String? = null
+    val syncDialogError: String? = null,
+    val lastSyncLabel: String? = null,
+    val isAutoSyncing: Boolean = false
 )

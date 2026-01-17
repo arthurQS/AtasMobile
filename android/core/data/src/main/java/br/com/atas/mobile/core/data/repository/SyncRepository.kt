@@ -29,6 +29,7 @@ interface SyncRepository {
     suspend fun pushAgendaOverride(meeting: Meeting): Result<Long>
     suspend fun fetchAgenda(meetingId: Long): Result<Meeting>
     suspend fun fetchAgendas(): Result<List<Meeting>>
+    suspend fun fetchAgendasSince(lastSyncAt: String): Result<List<Meeting>>
     fun observeMembership(): Flow<WardMembership?>
     fun observeStatus(): Flow<SyncStatus>
 }
