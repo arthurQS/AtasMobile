@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.atas.mobile.core.data.model.MeetingSummary
 import br.com.atas.mobile.core.data.repository.MeetingRepository
 import br.com.atas.mobile.core.data.repository.SyncRepository
+import br.com.atas.mobile.core.data.repository.SyncSettingsRepository
 import br.com.atas.mobile.core.data.repository.SyncState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -23,11 +24,13 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class MeetingsViewModel @Inject constructor(
     private val meetingRepository: MeetingRepository,
-    private val syncRepository: SyncRepository
+    private val syncRepository: SyncRepository,
+    private val syncSettingsRepository: SyncSettingsRepository
 ) : ViewModel() {
 
     private val dialogState = MutableStateFlow(SyncDialogState())
     private var autoSyncJob: Job? = null
+    private var autoSyncIntervalMs: Long? = null
 
     val uiState: StateFlow<MeetingsUiState> = combine(
         meetingRepository.streamAll()
@@ -59,16 +62,20 @@ class MeetingsViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 syncRepository.observeStatus(),
-                syncRepository.observeMembership()
-            ) { status, membership ->
-                status to membership
-            }.collect { (status, membership) ->
+                syncRepository.observeMembership(),
+                syncSettingsRepository.autoSyncIntervalMs
+            ) { status, membership, interval ->
+                Triple(status, membership, interval)
+            }.collect { (status, membership, interval) ->
                 val shouldSync = status.state == SyncState.CONNECTED && membership != null
-                if (shouldSync && autoSyncJob == null) {
-                    autoSyncJob = launchAutoSync()
+                if (shouldSync && (autoSyncJob == null || autoSyncIntervalMs != interval)) {
+                    autoSyncJob?.cancel()
+                    autoSyncIntervalMs = interval
+                    autoSyncJob = launchAutoSync(interval)
                 } else if (!shouldSync) {
                     autoSyncJob?.cancel()
                     autoSyncJob = null
+                    autoSyncIntervalMs = null
                 }
             }
         }
@@ -149,20 +156,16 @@ class MeetingsViewModel @Inject constructor(
             subtitle = "Atualizada em ${lastUpdatedAt.take(10)}"
         )
 
-    private fun launchAutoSync(): Job {
+    private fun launchAutoSync(intervalMs: Long): Job {
         return viewModelScope.launch {
             while (isActive) {
                 syncRepository.fetchAgendas()
                     .onSuccess { meetings ->
                         meetings.forEach { meetingRepository.upsert(it) }
                     }
-                delay(AUTO_SYNC_INTERVAL_MS)
+                delay(intervalMs)
             }
         }
-    }
-
-    companion object {
-        private const val AUTO_SYNC_INTERVAL_MS = 120_000L
     }
 }
 

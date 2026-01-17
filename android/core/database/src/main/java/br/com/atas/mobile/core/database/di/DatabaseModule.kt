@@ -11,9 +11,11 @@ import br.com.atas.mobile.core.data.model.MeetingSpeaker
 import br.com.atas.mobile.core.data.repository.BackupRepository
 import br.com.atas.mobile.core.data.repository.HymnRepository
 import br.com.atas.mobile.core.data.repository.MeetingRepository
+import br.com.atas.mobile.core.data.repository.SyncSettingsRepository
 import br.com.atas.mobile.core.database.AppDatabase
 import br.com.atas.mobile.core.database.dao.MeetingDao
 import br.com.atas.mobile.core.database.datastore.BackupSettingsDataStore
+import br.com.atas.mobile.core.database.datastore.SyncSettingsDataStore
 import br.com.atas.mobile.core.database.model.MeetingEntity
 import br.com.atas.mobile.core.database.repository.AssetHymnRepository
 import br.com.atas.mobile.core.database.repository.DefaultBackupRepository
@@ -67,6 +69,12 @@ object DatabaseModule {
         settingsDataStore: BackupSettingsDataStore,
         coordinator: DriveBackupCoordinator
     ): BackupRepository = DefaultBackupRepository(settingsDataStore, coordinator)
+
+    @Provides
+    @Singleton
+    fun provideSyncSettingsRepository(
+        settingsDataStore: SyncSettingsDataStore
+    ): SyncSettingsRepository = settingsDataStore
 
     @Provides
     @Singleton
