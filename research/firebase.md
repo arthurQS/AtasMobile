@@ -89,6 +89,11 @@ service cloud.firestore {
 - `updateAgenda(wardId, agendaId, payload, expectedVersion)`: valida versao e atualiza atomico.
 - `createWard(name, password)`: cria unidade e grava hash/salt (admin tool).
 
+## Implemented files
+- `firebase/functions/index.js`: Funcoes `createWard`, `joinWard`, `updateAgenda`.
+- `firebase/firestore.rules`: regras iniciais de acesso por unidade.
+- `firebase/firebase.json`: configuracao base do Firebase CLI.
+
 ## Data Migration
 - `wardId` pode ser slug ou UUID.
 - Para migrar dados locais, criar agenda no Firestore com `version=1`.

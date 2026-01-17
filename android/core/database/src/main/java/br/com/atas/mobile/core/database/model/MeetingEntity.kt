@@ -15,5 +15,7 @@ data class MeetingEntity(
     @ColumnInfo(name = "created_at")
     val createdAt: String,
     @ColumnInfo(name = "updated_at")
-    val updatedAt: String
+    val updatedAt: String,
+    @ColumnInfo(name = "sync_version")
+    val syncVersion: Long = 0L
 )

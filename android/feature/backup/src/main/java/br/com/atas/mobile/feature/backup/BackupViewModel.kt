@@ -9,13 +9,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.atas.mobile.core.data.model.BackupReason
 import br.com.atas.mobile.core.data.repository.BackupRepository
+import br.com.atas.mobile.core.data.repository.SyncRepository
 import br.com.atas.mobile.core.drive.datastore.DriveFolderSettingsDataStore
+import br.com.atas.mobile.core.drive.util.BackupZipUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
-import java.io.FileOutputStream
 import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +30,8 @@ import kotlinx.coroutines.withContext
 class BackupViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val backupRepository: BackupRepository,
-    private val driveSettings: DriveFolderSettingsDataStore
+    private val driveSettings: DriveFolderSettingsDataStore,
+    private val syncRepository: SyncRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(BackupUiState())
@@ -51,6 +52,11 @@ class BackupViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val defaultDriveUri = resolveDriveRootUri()
             _uiState.update { it.copy(driveDefaultUri = defaultDriveUri) }
+        }
+        viewModelScope.launch {
+            syncRepository.observeStatus().collect { status ->
+                _uiState.update { it.copy(syncStatus = status) }
+            }
         }
     }
 
@@ -144,24 +150,15 @@ class BackupViewModel @Inject constructor(
                     zip.closeEntry()
                 }
             }
-        } ?: error("Não foi possível acessar o local selecionado")
+        } ?: error("Nao foi possivel acessar o local selecionado")
     }
 
     private suspend fun restoreDatabase(uri: Uri) = withContext(Dispatchers.IO) {
         val dbFile = context.getDatabasePath(DATABASE_NAME)
         val dbDir = dbFile.parentFile ?: context.filesDir
         context.contentResolver.openInputStream(uri)?.use { input ->
-            ZipInputStream(input).use { zip ->
-                var entry = zip.nextEntry
-                while (entry != null) {
-                    val outFile = File(dbDir, entry.name)
-                    if (!outFile.parentFile.exists()) outFile.parentFile.mkdirs()
-                    FileOutputStream(outFile).use { output -> zip.copyTo(output) }
-                    zip.closeEntry()
-                    entry = zip.nextEntry
-                }
-            }
-        } ?: error("Não foi possível ler o arquivo selecionado")
+            BackupZipUtils.restoreDatabaseZip(input, dbDir, DATABASE_NAME)
+        } ?: error("Nao foi possivel ler o arquivo selecionado")
     }
 
     companion object {

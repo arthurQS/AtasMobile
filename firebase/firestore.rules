@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function memberPath(wardId) {
+      return /databases/$(database)/documents/wards/$(wardId)/members/$(request.auth.uid);
+    }
+
+    function isMember(wardId) {
+      return isSignedIn() && exists(memberPath(wardId));
+    }
+
+    function isAdmin(wardId) {
+      return isMember(wardId) && get(memberPath(wardId)).data.role == "admin";
+    }
+
+    match /wards/{wardId} {
+      allow read, write: if false;
+
+      match /members/{uid} {
+        allow read: if isMember(wardId);
+        allow create: if false;
+        allow update: if isSignedIn() &&
+          request.auth.uid == uid &&
+          request.resource.data.role == resource.data.role;
+        allow delete: if isAdmin(wardId);
+      }
+
+      match /agendas/{agendaId} {
+        allow read: if isMember(wardId);
+        allow create: if isMember(wardId) && request.resource.data.version == 1;
+        allow update: if isMember(wardId) &&
+          request.resource.data.version == resource.data.version + 1;
+        allow delete: if isAdmin(wardId);
+      }
+
+      match /agendas/{agendaId}/edits/{editId} {
+        allow read: if isMember(wardId);
+        allow create: if isMember(wardId);
+        allow update, delete: if false;
+      }
+    }
+  }
+}

@@ -17,7 +17,7 @@ class MeetingHymnPlacementTest {
         val placement = calculateHymnPlacement(listOf(MeetingSpeaker()))
 
         assertEquals(0, placement?.insertAfterIndex)
-        assertEquals("O hino intermediário será cantado após o orador.", placement?.message)
+        assertEquals("O hino intermediario sera cantado apos o orador.", placement?.message)
     }
 
     @Test
@@ -27,7 +27,7 @@ class MeetingHymnPlacementTest {
         )
 
         assertEquals(0, placement?.insertAfterIndex)
-        assertEquals("O hino intermediário ficará entre os dois oradores.", placement?.message)
+        assertEquals("O hino intermediario ficara entre os dois oradores.", placement?.message)
     }
 
     @Test
@@ -37,6 +37,6 @@ class MeetingHymnPlacementTest {
         )
 
         assertEquals(1, placement?.insertAfterIndex)
-        assertEquals("O hino intermediário será cantado após o segundo orador.", placement?.message)
+        assertEquals("O hino intermediario sera cantado apos o segundo orador.", placement?.message)
     }
 }

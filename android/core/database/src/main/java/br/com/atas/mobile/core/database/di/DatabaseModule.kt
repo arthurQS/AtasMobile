@@ -2,6 +2,8 @@ package br.com.atas.mobile.core.database.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import br.com.atas.mobile.core.data.model.MeetingDetails
 import br.com.atas.mobile.core.data.model.MeetingHymns
 import br.com.atas.mobile.core.data.model.MeetingPrayers
@@ -40,6 +42,7 @@ object DatabaseModule {
     ): AppDatabase {
         val db = Room.databaseBuilder(context, AppDatabase::class.java, "atas.db")
             .setJournalMode(androidx.room.RoomDatabase.JournalMode.WRITE_AHEAD_LOGGING)
+            .addMigrations(MIGRATION_2_3)
             .fallbackToDestructiveMigration()
             .build()
         runBlocking {
@@ -70,6 +73,12 @@ object DatabaseModule {
     fun provideHymnRepository(
         impl: AssetHymnRepository
     ): HymnRepository = impl
+}
+
+private val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE meetings ADD COLUMN sync_version INTEGER NOT NULL DEFAULT 0")
+    }
 }
 
 private suspend fun seedDatabaseIfNeeded(
@@ -229,7 +238,8 @@ private fun createSampleMeetings(
             title = seed.title,
             detailsJson = adapter.encode(seed.details),
             createdAt = createdAt,
-            updatedAt = createdAt
+            updatedAt = createdAt,
+            syncVersion = 0L
         )
     }
 }

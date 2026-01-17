@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,9 +15,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.requiredSizeIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSizeIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -28,20 +26,20 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.People
-import androidx.compose.material.icons.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.PictureAsPdf
+import androidx.compose.material.icons.filled.PlaylistAdd
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,16 +49,16 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -73,8 +71,8 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.atas.mobile.core.data.model.Hymn
-import br.com.atas.mobile.core.data.model.MeetingDetails
 import br.com.atas.mobile.core.data.model.Meeting
+import br.com.atas.mobile.core.data.model.MeetingDetails
 import br.com.atas.mobile.core.data.model.MeetingSpeaker
 import br.com.atas.mobile.core.data.repository.SyncState
 import br.com.atas.mobile.core.data.repository.SyncStatus
@@ -122,7 +120,9 @@ fun MeetingEditorScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Nova agenda") },
+                title = {
+                    Text(if (state.meetingId == null) "Nova agenda" else "Editar agenda")
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Voltar")
@@ -161,15 +161,15 @@ fun MeetingEditorScreen(
             MeetingHeaderCard(state = state, details = details)
 
             SectionCard(
-                title = "Informações gerais",
-                subtitle = "Dados administrativos e liderança",
+                title = "Informacoes gerais",
+                subtitle = "Dados administrativos e lideranca",
                 icon = Icons.Default.Info
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
                         value = state.title,
                         onValueChange = onTitleChange,
-                        label = { Text("Título") },
+                        label = { Text("Titulo") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
@@ -181,13 +181,13 @@ fun MeetingEditorScreen(
                     OutlinedTextField(
                         value = details.orgao,
                         onValueChange = { onDetailsChange(details.copy(orgao = it)) },
-                        label = { Text("Órgão") },
+                        label = { Text("Orgao") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = details.frequencia,
                         onValueChange = { onDetailsChange(details.copy(frequencia = it)) },
-                        label = { Text("Frequência") },
+                        label = { Text("Frequencia") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
@@ -223,7 +223,7 @@ fun MeetingEditorScreen(
                     OutlinedTextField(
                         value = details.tipo,
                         onValueChange = { onDetailsChange(details.copy(tipo = it)) },
-                        label = { Text("Tipo de reunião") },
+                        label = { Text("Tipo de reuniao") },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -231,14 +231,14 @@ fun MeetingEditorScreen(
 
             SectionCard(
                 title = "Abertura",
-                subtitle = "Defina hino, oração e anúncios iniciais",
+                subtitle = "Defina hino, oracao e anuncios iniciais",
                 icon = Icons.Default.CalendarToday
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
                         value = details.anuncios,
                         onValueChange = { onDetailsChange(details.copy(anuncios = it)) },
-                        label = { Text("Anúncios") },
+                        label = { Text("Anuncios") },
                         modifier = Modifier.fillMaxWidth(),
                         minLines = 3
                     )
@@ -252,7 +252,7 @@ fun MeetingEditorScreen(
                     OutlinedTextField(
                         value = details.oracoes.abertura,
                         onValueChange = { onDetailsChange(details.copy(oracoes = details.oracoes.copy(abertura = it))) },
-                        label = { Text("Oração de abertura") },
+                        label = { Text("Oracao de abertura") },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -260,13 +260,13 @@ fun MeetingEditorScreen(
 
             SectionCard(
                 title = "Chamados e apoios",
-                subtitle = "Sustentações, chamados e desobrigações",
+                subtitle = "Sustentacoes, chamados e desobrigacoes",
                 icon = Icons.Default.Description
             ) {
                 OutlinedTextField(
                     value = details.desobrigacoes,
                     onValueChange = { onDetailsChange(details.copy(desobrigacoes = it)) },
-                    label = { Text("Desobrigações") },
+                    label = { Text("Desobrigacoes") },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 3
                 )
@@ -319,21 +319,21 @@ fun MeetingEditorScreen(
                     OutlinedTextField(
                         value = details.oracoes.encerramento,
                         onValueChange = { onDetailsChange(details.copy(oracoes = details.oracoes.copy(encerramento = it))) },
-                        label = { Text("Oração de encerramento") },
+                        label = { Text("Oracao de encerramento") },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
 
             SectionCard(
-                title = "Observações",
+                title = "Observacoes",
                 subtitle = "Notas adicionais para a agenda",
                 icon = Icons.Default.Info
             ) {
                 OutlinedTextField(
                     value = details.observacoes,
                     onValueChange = { onDetailsChange(details.copy(observacoes = it)) },
-                    label = { Text("Observações gerais") },
+                    label = { Text("Observacoes gerais") },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 4
                 )
@@ -390,7 +390,7 @@ private fun MeetingFooterActions(
             Text(if (isSaving) "Salvando..." else "Salvar agenda")
         }
         Text(
-            text = "Uma cópia local é salva automaticamente e pode ser enviada ao Google Drive nas configurações.",
+            text = "Uma copia local e salva automaticamente e pode ser enviada ao Google Drive nas configuracoes.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -403,8 +403,8 @@ private fun MeetingHeaderCard(
     state: MeetingEditorUiState,
     details: MeetingDetails
 ) {
-    val title = state.title.ifBlank { "Agenda sem título" }
-    val dateLabel = if (state.date.isBlank()) "Data ainda não informada" else "Prevista para ${state.date}"
+    val title = state.title.ifBlank { "Agenda sem titulo" }
+    val dateLabel = if (state.date.isBlank()) "Data ainda nao informada" else "Prevista para ${state.date}"
     val createdAt = state.createdAt?.takeIf { it.isNotBlank() }
     val hymnCount = listOf(
         details.hinos.abertura,
@@ -449,9 +449,9 @@ private fun MeetingHeaderCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                MeetingMetadataChip("Órgão", details.orgao)
+                MeetingMetadataChip("Orgao", details.orgao)
                 MeetingMetadataChip("Ala", details.ala)
-                MeetingMetadataChip("Frequência", details.frequencia)
+                MeetingMetadataChip("Frequencia", details.frequencia)
                 MeetingMetadataChip("Tipo", details.tipo)
                 MeetingMetadataChip("Preside", details.preside)
                 MeetingMetadataChip("Dirige", details.dirige)
@@ -484,7 +484,8 @@ private fun MeetingEditorUiState.toMeeting(): Meeting =
         date = date,
         title = title.ifBlank { "Agenda" },
         details = details,
-        createdAt = createdAt
+        createdAt = createdAt,
+        syncVersion = syncVersion
     )
 
 private fun sharePdf(context: Context, uri: Uri) {
@@ -510,7 +511,7 @@ private fun MeetingMetadataChip(label: String, value: String) {
         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.12f)
     ) {
         Text(
-            text = "$label • $value",
+            text = "$label - $value",
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
@@ -557,7 +558,7 @@ private fun SpeakersSection(
         val hymnPlacement = calculateHymnPlacement(speakers)
 
         if (speakers.isEmpty()) {
-            Text("Reunião de Testemunhos", style = MaterialTheme.typography.bodyMedium)
+            Text("Reuniao de Testemunhos", style = MaterialTheme.typography.bodyMedium)
         } else {
             speakers.forEachIndexed { index, speaker ->
                 ElevatedCard(
@@ -594,7 +595,7 @@ private fun SpeakersSection(
                                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold)
                                 )
                                 Text(
-                                    text = if (speaker.assunto.isBlank()) "Tema ainda não definido" else speaker.assunto,
+                                    text = if (speaker.assunto.isBlank()) "Tema ainda nao definido" else speaker.assunto,
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     maxLines = 1,
@@ -640,7 +641,7 @@ private fun SpeakersSection(
                             .padding(vertical = 12.dp)
                     ) {
                         HymnPickerField(
-                            label = "Hino intermediário",
+                            label = "Hino intermediario",
                             value = details.hinos.intermediario,
                             hymns = hymns,
                             onValueChange = {
@@ -671,6 +672,7 @@ private fun SpeakersSection(
         }
     }
 }
+
 @Composable
 private fun SectionCard(
     title: String,
@@ -765,7 +767,7 @@ private fun HymnPickerField(
                     expanded = true
                 },
                 singleLine = true,
-                placeholder = { Text("Número ou título") },
+                placeholder = { Text("Numero ou titulo") },
                 trailingIcon = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         if (query.isNotBlank()) {
@@ -793,44 +795,44 @@ private fun HymnPickerField(
                         if (state.isFocused) expanded = true
                     }
             )
-        DropdownMenu(
-            expanded = expanded && filtered.isNotEmpty(),
-            onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth(),
-            properties = PopupProperties(focusable = false)
-        ) {
-            Column(
-                modifier = Modifier
-                    .requiredSizeIn(maxHeight = 360.dp)
-                    .verticalScroll(rememberScrollState())
+            DropdownMenu(
+                expanded = expanded && filtered.isNotEmpty(),
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.fillMaxWidth(),
+                properties = PopupProperties(focusable = false)
             ) {
-                filtered.forEach { hymn ->
-                    DropdownMenuItem(
-                        text = {
-                            Column {
-                                Text(
-                                    text = "${hymn.number} - ${hymn.title}",
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                                hymn.category?.let {
+                Column(
+                    modifier = Modifier
+                        .requiredSizeIn(maxHeight = 360.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    filtered.forEach { hymn ->
+                        DropdownMenuItem(
+                            text = {
+                                Column {
                                     Text(
-                                        text = it,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        text = "${hymn.number} - ${hymn.title}",
+                                        style = MaterialTheme.typography.bodyMedium
                                     )
+                                    hymn.category?.let {
+                                        Text(
+                                            text = it,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 }
+                            },
+                            onClick = {
+                                val selection = "${hymn.number} - ${hymn.title}"
+                                query = selection
+                                onValueChange(selection)
+                                expanded = false
                             }
-                        },
-                        onClick = {
-                            val selection = "${hymn.number} - ${hymn.title}"
-                            query = selection
-                            onValueChange(selection)
-                            expanded = false
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
     }
-}
 }

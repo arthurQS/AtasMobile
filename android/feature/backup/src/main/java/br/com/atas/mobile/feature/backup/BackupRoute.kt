@@ -29,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import br.com.atas.mobile.core.data.repository.SyncState
+import br.com.atas.mobile.core.data.repository.SyncStatus
 import java.time.LocalDate
 
 @Composable
@@ -59,6 +61,7 @@ fun BackupRoute(
         driveFolderName = uiState.driveFolderName,
         isDriveLinked = uiState.isDriveLinked,
         isDriveBusy = uiState.isDriveBusy,
+        syncStatus = uiState.syncStatus,
         onBack = onBack,
         onExportLocal = {
             val defaultName = "agenda-backup-${LocalDate.now()}.zip"
@@ -83,6 +86,7 @@ fun BackupScreen(
     driveFolderName: String?,
     isDriveLinked: Boolean,
     isDriveBusy: Boolean,
+    syncStatus: SyncStatus,
     onBack: () -> Unit,
     onExportLocal: () -> Unit,
     onImportLocal: () -> Unit,
@@ -111,6 +115,9 @@ fun BackupScreen(
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
+            if (syncStatus.state != SyncState.DISABLED) {
+                SyncStatusBanner(syncStatus)
+            }
             Text(
                 text = "Salve um arquivo .zip com a base local e restaure quando precisar.",
                 style = MaterialTheme.typography.bodyLarge
@@ -175,6 +182,26 @@ fun BackupScreen(
             }
         }
     }
+}
+
+@Composable
+private fun SyncStatusBanner(status: SyncStatus) {
+    val label = when (status.state) {
+        SyncState.CONNECTED -> "Sincronizacao conectada"
+        SyncState.ERROR -> "Erro de sincronizacao"
+        SyncState.CONFLICT -> "Conflito de sincronizacao"
+        SyncState.DISABLED -> "Sincronizacao desativada"
+    }
+    val message = status.message?.takeIf { it.isNotBlank() }
+    Text(
+        text = message?.let { "$label: $it" } ?: label,
+        color = if (status.state == SyncState.ERROR || status.state == SyncState.CONFLICT) {
+            MaterialTheme.colorScheme.error
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        },
+        style = MaterialTheme.typography.bodyMedium
+    )
 }
 
 private fun resolveDriveInitialUri(savedUri: String?, defaultUri: String?): Uri? =

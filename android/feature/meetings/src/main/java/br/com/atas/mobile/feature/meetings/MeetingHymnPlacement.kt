@@ -20,9 +20,9 @@ fun calculateHymnPlacement(speakers: List<MeetingSpeaker>): HymnPlacement? {
     if (speakers.isEmpty()) return null
     val insertAfterIndex = if (speakers.size >= 3) 1 else 0
     val message = when (speakers.size) {
-        1 -> "O hino intermediário será cantado após o orador."
-        2 -> "O hino intermediário ficará entre os dois oradores."
-        else -> "O hino intermediário será cantado após o segundo orador."
+        1 -> "O hino intermediario sera cantado apos o orador."
+        2 -> "O hino intermediario ficara entre os dois oradores."
+        else -> "O hino intermediario sera cantado apos o segundo orador."
     }
     return HymnPlacement(insertAfterIndex = insertAfterIndex, message = message)
 }

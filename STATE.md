@@ -3,6 +3,7 @@
 ## Position
 - Documentacao base criada e alinhada ao escopo atual.
 - UI e docs migradas para terminologia "Agenda".
+- Fases 1 e 2 concluidas (offline e backup local).
 
 ## Decisions
 - Offline-first com Room/DataStore.

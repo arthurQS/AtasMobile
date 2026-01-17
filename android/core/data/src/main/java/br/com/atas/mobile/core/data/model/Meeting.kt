@@ -9,7 +9,8 @@ data class Meeting(
     val title: String,
     val details: MeetingDetails = MeetingDetails(),
     val createdAt: String? = null,
-    val updatedAt: String? = null
+    val updatedAt: String? = null,
+    val syncVersion: Long? = null
 )
 
 @Serializable

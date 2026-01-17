@@ -45,7 +45,8 @@ class MeetingEditorViewModel @Inject constructor(
                             date = meeting.date,
                             title = meeting.title,
                             details = meeting.details,
-                            createdAt = meeting.createdAt
+                            createdAt = meeting.createdAt,
+                            syncVersion = meeting.syncVersion
                         )
                     }
                 }
@@ -86,8 +87,9 @@ class MeetingEditorViewModel @Inject constructor(
 
     fun save(onSuccess: (Long) -> Unit) {
         val current = _uiState.value
-        if (current.date.isBlank() || current.title.isBlank()) {
-            _uiState.update { it.copy(errorMessage = "Preencha data e titulo") }
+        val validationError = MeetingInputValidator.validate(current.date, current.title)
+        if (validationError != null) {
+            _uiState.update { it.copy(errorMessage = validationError) }
             return
         }
         viewModelScope.launch {
@@ -97,13 +99,18 @@ class MeetingEditorViewModel @Inject constructor(
                 date = current.date,
                 title = current.title.trim(),
                 details = current.details,
-                createdAt = current.createdAt
+                createdAt = current.createdAt,
+                syncVersion = current.syncVersion
             )
             runCatching {
                 meetingRepository.upsert(meeting)
             }
                 .onSuccess { id ->
-                    syncRepository.pushAgenda(meeting.copy(id = id))
+                    syncRepository.pushAgenda(meeting.copy(id = id, syncVersion = current.syncVersion))
+                        .onSuccess { version ->
+                            meetingRepository.upsert(meeting.copy(id = id, syncVersion = version))
+                            _uiState.update { it.copy(syncVersion = version) }
+                        }
                     _uiState.update { it.copy(isSaving = false) }
                     onSuccess(id)
                 }

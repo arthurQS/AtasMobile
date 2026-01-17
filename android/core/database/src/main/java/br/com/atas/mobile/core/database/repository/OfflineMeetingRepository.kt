@@ -40,7 +40,8 @@ class OfflineMeetingRepository @Inject constructor(
             title = meeting.title,
             detailsJson = jsonAdapter.encode(meeting.details.ifEmptyDefault(meeting.title)),
             createdAt = meeting.createdAt ?: now,
-            updatedAt = now
+            updatedAt = now,
+            syncVersion = meeting.syncVersion ?: 0L
         )
         val newId = meetingDao.upsert(entity)
         return if (meeting.id != 0L) meeting.id else newId
@@ -64,7 +65,8 @@ class OfflineMeetingRepository @Inject constructor(
             title = title,
             details = jsonDecoder(detailsJson),
             createdAt = createdAt,
-            updatedAt = updatedAt
+            updatedAt = updatedAt,
+            syncVersion = syncVersion
         )
 
     private fun MeetingDetails.ifEmptyDefault(title: String): MeetingDetails {

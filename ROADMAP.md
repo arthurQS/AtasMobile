@@ -1,12 +1,12 @@
 # ROADMAP
 
 ## Phase 1 - Core offline creation (R1-R4)
-- [ ] Confirmar fluxos de criar/editar agenda
-- [ ] Validar regras essenciais
-- [ ] PDF da agenda
+- [x] Confirmar fluxos de criar/editar agenda
+- [x] Validar regras essenciais
+- [x] PDF da agenda
 
 ## Phase 2 - Backup local e nomenclatura (R5-R6)
-- [ ] Export/import zip via SAF
+- [x] Export/import zip via SAF
 - [x] Padronizar terminologia para "Agenda" na UI e docs
 
 ## Phase 3 - Sync colaborativo (R7-R11)

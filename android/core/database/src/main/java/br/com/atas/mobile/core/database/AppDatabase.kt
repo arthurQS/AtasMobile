@@ -7,7 +7,7 @@ import br.com.atas.mobile.core.database.model.MeetingEntity
 
 @Database(
     entities = [MeetingEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {

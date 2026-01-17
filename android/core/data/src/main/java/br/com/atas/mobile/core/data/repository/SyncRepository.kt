@@ -15,6 +15,8 @@ enum class SyncState {
     CONFLICT
 }
 
+class SyncConflictException(message: String) : Exception(message)
+
 data class SyncStatus(
     val state: SyncState,
     val message: String? = null
@@ -23,6 +25,6 @@ data class SyncStatus(
 interface SyncRepository {
     suspend fun signInAnonymously(): Result<String>
     suspend fun joinWard(wardCode: String, masterPassword: String): Result<WardMembership>
-    suspend fun pushAgenda(meeting: Meeting): Result<Unit>
+    suspend fun pushAgenda(meeting: Meeting): Result<Long>
     fun observeStatus(): Flow<SyncStatus>
 }

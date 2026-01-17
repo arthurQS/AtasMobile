@@ -11,6 +11,7 @@ data class MeetingEditorUiState(
     val title: String = "",
     val details: MeetingDetails = MeetingDetails(),
     val createdAt: String? = null,
+    val syncVersion: Long? = null,
     val hymns: List<Hymn> = emptyList(),
     val isSaving: Boolean = false,
     val errorMessage: String? = null,

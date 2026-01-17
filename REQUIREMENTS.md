@@ -5,11 +5,11 @@
 - v2: Sincronizacao colaborativa e melhorias de UX.
 
 ## v1 Requirements
-- [ ] R1: Criar e editar agendas offline.
-- [ ] R2: Validar data/titulo e campos essenciais.
-- [ ] R3: Selecionar hinos a partir do catalogo local.
-- [ ] R4: Gerar PDF da agenda.
-- [ ] R5: Backup local (export/import) do banco.
+- [x] R1: Criar e editar agendas offline.
+- [x] R2: Validar data/titulo e campos essenciais.
+- [x] R3: Selecionar hinos a partir do catalogo local.
+- [x] R4: Gerar PDF da agenda.
+- [x] R5: Backup local (export/import) do banco.
 - [x] R6: Padronizar terminologia para "Agenda" em toda a UI e docs.
 
 ## v2 Requirements
