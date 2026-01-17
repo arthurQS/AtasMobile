@@ -72,7 +72,8 @@ class FirebaseSyncRepository(
             val payload = mapOf(
                 "title" to meeting.title,
                 "date" to meeting.date,
-                "data" to meeting.details
+                "data" to meeting.details,
+                "status" to STATUS_DRAFT
             )
             val response = functions
                 .getHttpsCallable("updateAgenda")
@@ -104,6 +105,8 @@ class FirebaseSyncRepository(
     }
 
     companion object {
+        private const val STATUS_DRAFT = "draft"
+
         fun createDefault(): FirebaseSyncRepository {
             return FirebaseSyncRepository(
                 auth = FirebaseAuth.getInstance(),

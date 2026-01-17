@@ -31,7 +31,7 @@ wards/{wardId}/agendas/{agendaId}
   version: number
   updatedAt: timestamp
   updatedBy: uid
-  status: "draft" | "final"
+  status: "draft" | "final" (opcional)
 
 wards/{wardId}/agendas/{agendaId}/edits/{editId}
   changedAt: timestamp
@@ -54,6 +54,7 @@ wards/{wardId}/agendas/{agendaId}/edits/{editId}
   - Recarregar remoto.
   - Forcar overwrite (admin).
   - Mesclar manual (futuro).
+- App envia `status` com valor default `draft`.
 
 ## Security Rules (sketch)
 ```
@@ -83,6 +84,16 @@ service cloud.firestore {
   }
 }
 ```
+
+## Final Rules (implemented)
+- Apenas membros podem ler agendas e members.
+- Edicao permitida para roles `admin` e `editor`.
+- `members/{uid}` nao pode trocar `role` nem `joinedAt`, apenas `displayName` e `lastActiveAt`.
+- `agendas/{agendaId}` exige payload completo com:
+  `title`, `date`, `data`, `version`, `updatedAt`, `updatedBy` e `status` opcional.
+- `updatedBy` deve ser o UID do usuario autenticado.
+- `version` incrementa a cada update (`resource.version + 1`).
+- Documento `wards/{wardId}` nao e legivel via cliente (contém hash/salt).
 
 ## Required Cloud Functions
 - `joinWard(wardCode, password)`: valida senha master e cria membership.

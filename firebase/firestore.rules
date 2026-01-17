@@ -17,6 +17,31 @@ service cloud.firestore {
       return isMember(wardId) && get(memberPath(wardId)).data.role == "admin";
     }
 
+    function canEdit(wardId) {
+      return isMember(wardId) &&
+        get(memberPath(wardId)).data.role in ["admin", "editor"];
+    }
+
+    function isValidAgendaPayload() {
+      return request.resource.data.keys().hasOnly([
+        "title",
+        "date",
+        "data",
+        "version",
+        "updatedAt",
+        "updatedBy",
+        "status"
+      ]) &&
+        request.resource.data.title is string &&
+        request.resource.data.date is string &&
+        request.resource.data.data is map &&
+        request.resource.data.version is int &&
+        request.resource.data.updatedAt is timestamp &&
+        request.resource.data.updatedBy == request.auth.uid &&
+        (!("status" in request.resource.data) ||
+          request.resource.data.status in ["draft", "final"]);
+    }
+
     match /wards/{wardId} {
       allow read, write: if false;
 
@@ -25,15 +50,29 @@ service cloud.firestore {
         allow create: if false;
         allow update: if isSignedIn() &&
           request.auth.uid == uid &&
-          request.resource.data.role == resource.data.role;
+          request.resource.data.role == resource.data.role &&
+          request.resource.data.joinedAt == resource.data.joinedAt &&
+          request.resource.data.keys().hasOnly([
+            "role",
+            "displayName",
+            "joinedAt",
+            "lastActiveAt"
+          ]) &&
+          (!("displayName" in request.resource.data) ||
+            request.resource.data.displayName is string) &&
+          (!("lastActiveAt" in request.resource.data) ||
+            request.resource.data.lastActiveAt is timestamp);
         allow delete: if isAdmin(wardId);
       }
 
       match /agendas/{agendaId} {
         allow read: if isMember(wardId);
-        allow create: if isMember(wardId) && request.resource.data.version == 1;
-        allow update: if isMember(wardId) &&
-          request.resource.data.version == resource.data.version + 1;
+        allow create: if canEdit(wardId) &&
+          request.resource.data.version == 1 &&
+          isValidAgendaPayload();
+        allow update: if canEdit(wardId) &&
+          request.resource.data.version == resource.data.version + 1 &&
+          isValidAgendaPayload();
         allow delete: if isAdmin(wardId);
       }
 

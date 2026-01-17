@@ -1,0 +1,9 @@
+{
+  "name": "agenda-mobile-tests",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "@firebase/rules-unit-testing": "^3.0.0",
+    "firebase": "^10.8.0"
+  }
+}

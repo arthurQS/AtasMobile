@@ -10,6 +10,13 @@ This folder contains Cloud Functions and Firestore rules for Agenda Mobile.
    - Functions: `firebase deploy --only functions`
    - Rules: `firebase deploy --only firestore:rules`
 
+## Node
+- Use Node 18 for Functions and tests (`firebase/.nvmrc`).
+
+## Audit fix
+- Em `firebase/tests`, `npm audit fix` foi executado.
+- Permanecem avisos moderados em dependencias do `firebase` (undici); revisar ao atualizar o SDK.
+
 ## Admin claims
 `createWard` requires a user with `admin: true` custom claim.
 You can set the claim in the Firebase Console or via Admin SDK.

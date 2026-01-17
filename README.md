@@ -28,7 +28,7 @@ Cada modulo possui `src/main` e `src/test`. Os testes unitarios rodam via Gradle
 ## Configuracao rapida
 1. Instale o SDK 35 e abra `android/` no Android Studio.
 2. Sincronize o Gradle e confirme o `local.properties`.
-3. Configure `JAVA_HOME` (JDK 17). Exemplo: `C:\Users\Arthur Stumpf\.jdks\temurin-17.0.17`.
+3. Configure `JAVA_HOME` (JDK 25). Exemplo: `C:\Users\Arthur Stumpf\.jdks\temurin-25.0.1`.
 4. Adicione `android/app/google-services.json` (Firebase) se for usar sincronizacao.
 5. Opcional: revise `android/app/src/main/assets/hymns.json` caso adicione novos hinos.
 
