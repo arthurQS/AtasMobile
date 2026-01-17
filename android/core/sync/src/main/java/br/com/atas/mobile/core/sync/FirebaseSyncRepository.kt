@@ -28,10 +28,12 @@ class FirebaseSyncRepository(
     private val firestore: FirebaseFirestore
 ) : SyncRepository {
     private val status = MutableStateFlow(SyncStatus(SyncState.DISABLED))
+    private val membership = MutableStateFlow<WardMembership?>(null)
     private var wardId: String? = null
     private val json = Json { ignoreUnknownKeys = true }
 
     override fun observeStatus(): Flow<SyncStatus> = status.asStateFlow()
+    override fun observeMembership(): Flow<WardMembership?> = membership.asStateFlow()
 
     override suspend fun signInAnonymously(): Result<String> {
         return runCatching {
@@ -67,7 +69,7 @@ class FirebaseSyncRepository(
             val serverWardId = response["wardId"] as? String ?: error("wardId ausente")
             val role = response["role"] as? String ?: "editor"
             wardId = serverWardId
-            WardMembership(serverWardId, role)
+            WardMembership(serverWardId, role).also { membership.value = it }
         }.onFailure { error ->
             status.value = SyncStatus(SyncState.ERROR, error.message)
         }
@@ -111,6 +113,42 @@ class FirebaseSyncRepository(
             } else {
                 SyncStatus(SyncState.ERROR, error.message)
             }
+        }
+    }
+
+    override suspend fun pushAgendaOverride(meeting: Meeting): Result<Long> {
+        return runCatching {
+            val currentWardId = wardId ?: error("Ward nao vinculada")
+            val currentRole = membership.value?.role ?: "editor"
+            if (currentRole != "admin") {
+                error("Somente admin pode sobrescrever")
+            }
+            val agendaId = meeting.id.toString()
+            val payload = mapOf(
+                "title" to meeting.title,
+                "date" to meeting.date,
+                "data" to meeting.details,
+                "status" to STATUS_DRAFT
+            )
+            val response = functions
+                .getHttpsCallable("updateAgenda")
+                .call(
+                    mapOf(
+                        "wardId" to currentWardId,
+                        "agendaId" to agendaId,
+                        "payload" to payload,
+                        "expectedVersion" to null
+                    )
+                )
+                .await()
+                .data as? Map<*, *> ?: emptyMap<String, Any>()
+            val version = (response["version"] as? Number)?.toLong()
+            if (version == null) {
+                throw SyncConflictException("Falha ao atualizar versao remota")
+            }
+            version
+        }.onFailure { error ->
+            status.value = SyncStatus(SyncState.ERROR, error.message)
         }
     }
 

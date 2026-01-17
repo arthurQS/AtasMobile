@@ -15,6 +15,8 @@ data class MeetingEditorUiState(
     val hymns: List<Hymn> = emptyList(),
     val isSaving: Boolean = false,
     val isReloading: Boolean = false,
+    val isOverwriting: Boolean = false,
+    val canOverwrite: Boolean = false,
     val errorMessage: String? = null,
     val syncStatus: SyncStatus = SyncStatus(SyncState.DISABLED)
 )

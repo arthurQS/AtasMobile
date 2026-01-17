@@ -5,8 +5,11 @@ import androidx.lifecycle.viewModelScope
 import br.com.atas.mobile.core.data.model.MeetingSummary
 import br.com.atas.mobile.core.data.repository.MeetingRepository
 import br.com.atas.mobile.core.data.repository.SyncRepository
+import br.com.atas.mobile.core.data.repository.SyncState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +17,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -23,6 +27,7 @@ class MeetingsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val dialogState = MutableStateFlow(SyncDialogState())
+    private var autoSyncJob: Job? = null
 
     val uiState: StateFlow<MeetingsUiState> = combine(
         meetingRepository.streamAll()
@@ -49,6 +54,25 @@ class MeetingsViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = MeetingsUiState()
     )
+
+    init {
+        viewModelScope.launch {
+            combine(
+                syncRepository.observeStatus(),
+                syncRepository.observeMembership()
+            ) { status, membership ->
+                status to membership
+            }.collect { (status, membership) ->
+                val shouldSync = status.state == SyncState.CONNECTED && membership != null
+                if (shouldSync && autoSyncJob == null) {
+                    autoSyncJob = launchAutoSync()
+                } else if (!shouldSync) {
+                    autoSyncJob?.cancel()
+                    autoSyncJob = null
+                }
+            }
+        }
+    }
 
     fun refresh() {
         // Flow is backed by Room, so it stays in sync automatically.
@@ -124,6 +148,22 @@ class MeetingsViewModel @Inject constructor(
             dayLabel = date,
             subtitle = "Atualizada em ${lastUpdatedAt.take(10)}"
         )
+
+    private fun launchAutoSync(): Job {
+        return viewModelScope.launch {
+            while (isActive) {
+                syncRepository.fetchAgendas()
+                    .onSuccess { meetings ->
+                        meetings.forEach { meetingRepository.upsert(it) }
+                    }
+                delay(AUTO_SYNC_INTERVAL_MS)
+            }
+        }
+    }
+
+    companion object {
+        private const val AUTO_SYNC_INTERVAL_MS = 120_000L
+    }
 }
 
 private data class SyncDialogState(

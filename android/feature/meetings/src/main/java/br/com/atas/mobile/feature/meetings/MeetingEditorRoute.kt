@@ -92,7 +92,8 @@ fun MeetingEditorRoute(
         onTitleChange = viewModel::updateTitle,
         onDetailsChange = viewModel::updateDetails,
         onSave = { viewModel.save(onSaved) },
-        onReloadRemote = viewModel::reloadFromRemote
+        onReloadRemote = viewModel::reloadFromRemote,
+        onOverwriteRemote = viewModel::overwriteRemote
     )
 }
 
@@ -105,7 +106,8 @@ fun MeetingEditorScreen(
     onTitleChange: (String) -> Unit,
     onDetailsChange: (MeetingDetails) -> Unit,
     onSave: () -> Unit,
-    onReloadRemote: () -> Unit
+    onReloadRemote: () -> Unit,
+    onOverwriteRemote: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val details = state.details
@@ -344,10 +346,13 @@ fun MeetingEditorScreen(
             MeetingFooterActions(
                 isSaving = state.isSaving,
                 isReloading = state.isReloading,
+                isOverwriting = state.isOverwriting,
+                canOverwrite = state.canOverwrite,
                 errorMessage = state.errorMessage,
                 syncStatus = state.syncStatus,
                 onSave = onSave,
-                onReloadRemote = onReloadRemote
+                onReloadRemote = onReloadRemote,
+                onOverwriteRemote = onOverwriteRemote
             )
         }
     }
@@ -357,10 +362,13 @@ fun MeetingEditorScreen(
 private fun MeetingFooterActions(
     isSaving: Boolean,
     isReloading: Boolean,
+    isOverwriting: Boolean,
+    canOverwrite: Boolean,
     errorMessage: String?,
     syncStatus: SyncStatus,
     onSave: () -> Unit,
-    onReloadRemote: () -> Unit
+    onReloadRemote: () -> Unit,
+    onOverwriteRemote: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         errorMessage?.let {
@@ -391,15 +399,24 @@ private fun MeetingFooterActions(
         if (syncStatus.state == SyncState.CONFLICT) {
             OutlinedButton(
                 onClick = onReloadRemote,
-                enabled = !isSaving && !isReloading,
+                enabled = !isSaving && !isReloading && !isOverwriting,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(if (isReloading) "Recarregando..." else "Recarregar remoto")
             }
+            if (canOverwrite) {
+                OutlinedButton(
+                    onClick = onOverwriteRemote,
+                    enabled = !isSaving && !isReloading && !isOverwriting,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(if (isOverwriting) "Sobrescrevendo..." else "Forcar overwrite")
+                }
+            }
         }
         Button(
             onClick = onSave,
-            enabled = !isSaving && !isReloading,
+            enabled = !isSaving && !isReloading && !isOverwriting,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(if (isSaving) "Salvando..." else "Salvar agenda")

@@ -58,6 +58,11 @@ class MeetingEditorViewModel @Inject constructor(
                 _uiState.update { it.copy(syncStatus = status) }
             }
         }
+        viewModelScope.launch {
+            syncRepository.observeMembership().collect { membership ->
+                _uiState.update { it.copy(canOverwrite = membership?.role == "admin") }
+            }
+        }
 
         viewModelScope.launch {
             hymnRepository.watchAll().collect { list ->
@@ -150,6 +155,36 @@ class MeetingEditorViewModel @Inject constructor(
                         it.copy(
                             isReloading = false,
                             errorMessage = throwable.message ?: "Falha ao recarregar"
+                        )
+                    }
+                }
+        }
+    }
+
+    fun overwriteRemote() {
+        val current = _uiState.value
+        val meetingId = current.meetingId ?: return
+        if (!current.canOverwrite) return
+        viewModelScope.launch {
+            _uiState.update { it.copy(isOverwriting = true, errorMessage = null) }
+            val meeting = Meeting(
+                id = meetingId,
+                date = current.date,
+                title = current.title.trim(),
+                details = current.details,
+                createdAt = current.createdAt,
+                syncVersion = current.syncVersion
+            )
+            syncRepository.pushAgendaOverride(meeting)
+                .onSuccess { version ->
+                    meetingRepository.upsert(meeting.copy(syncVersion = version))
+                    _uiState.update { it.copy(syncVersion = version, isOverwriting = false) }
+                }
+                .onFailure { throwable ->
+                    _uiState.update {
+                        it.copy(
+                            isOverwriting = false,
+                            errorMessage = throwable.message ?: "Falha ao sobrescrever"
                         )
                     }
                 }
